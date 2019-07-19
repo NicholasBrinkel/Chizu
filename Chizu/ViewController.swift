@@ -72,8 +72,20 @@ class ViewController: UIViewController {
     }
     
     @IBAction func pressed(_ sender: Any) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        
+        for layer in imageLayers {
+            //layer.removeAnimation(forKey: "transform")
+            layer.transform = (num % 2 == 0) ? toTransform : undoTransform
+        }
+        
+        //CATransaction.commit()
+        CATransaction.setDisableActions(false)
+        
         let animation = CABasicAnimation(keyPath: "transform")
 
+        animation.fromValue = (num % 2 == 0) ? undoTransform : toTransform
         animation.toValue = (num % 2 == 0) ? toTransform : undoTransform
         animation.duration = 1
         animation.delegate = self
@@ -82,21 +94,11 @@ class ViewController: UIViewController {
         for layer in self.imageLayers {
             layer.add(animation, forKey: "transform")
         }
+        
+        CATransaction.commit()
+        num += 1
     }
 }
 
 extension ViewController: CAAnimationDelegate {
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        
-        for layer in imageLayers {
-            layer.removeAnimation(forKey: "transform")
-            layer.transform = (num % 2 == 0) ? toTransform : undoTransform
-        }
-        
-        CATransaction.commit()
-        CATransaction.setDisableActions(false)
-        num += 1
-    }
 }
