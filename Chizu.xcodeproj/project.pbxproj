@@ -3,26 +3,32 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		010FAF0E22C6AE2D00F2252D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010FAF0D22C6AE2D00F2252D /* AppDelegate.swift */; };
-		010FAF1022C6AE2D00F2252D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010FAF0F22C6AE2D00F2252D /* ViewController.swift */; };
 		010FAF1322C6AE2D00F2252D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 010FAF1122C6AE2D00F2252D /* Main.storyboard */; };
 		010FAF1522C6AE2D00F2252D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 010FAF1422C6AE2D00F2252D /* Assets.xcassets */; };
 		010FAF1822C6AE2D00F2252D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 010FAF1622C6AE2D00F2252D /* LaunchScreen.storyboard */; };
+		0114CE2522E78DE40020F007 /* MainMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0114CE2422E78DE40020F007 /* MainMapViewController.swift */; };
+		0114CE3122E7DD910020F007 /* PerspectiveStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0114CE3022E7DD900020F007 /* PerspectiveStackView.swift */; };
+		01DCB81122E24FC2000AD656 /* FloatingPanelContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01DCB81022E24FC2000AD656 /* FloatingPanelContentViewController.swift */; };
+		01F831C622E8BE99000051AB /* StackViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F831C522E8BE99000051AB /* StackViewTestViewController.swift */; };
 		4FEF6F6CE43AC0F8F1680921 /* Pods_Chizu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B03285183F96143397FB2EC /* Pods_Chizu.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		010FAF0A22C6AE2D00F2252D /* Chizu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chizu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		010FAF0D22C6AE2D00F2252D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		010FAF0F22C6AE2D00F2252D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		010FAF1222C6AE2D00F2252D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		010FAF1422C6AE2D00F2252D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		010FAF1722C6AE2D00F2252D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		010FAF1922C6AE2D00F2252D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0114CE2422E78DE40020F007 /* MainMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMapViewController.swift; sourceTree = "<group>"; };
+		0114CE3022E7DD900020F007 /* PerspectiveStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerspectiveStackView.swift; sourceTree = "<group>"; };
+		01DCB81022E24FC2000AD656 /* FloatingPanelContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelContentViewController.swift; sourceTree = "<group>"; };
+		01F831C522E8BE99000051AB /* StackViewTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewTestViewController.swift; sourceTree = "<group>"; };
 		08DEB4A2A8CE0588AB526978 /* Pods-Chizu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chizu.debug.xcconfig"; path = "Target Support Files/Pods-Chizu/Pods-Chizu.debug.xcconfig"; sourceTree = "<group>"; };
 		2E3CEB4176398EFCC994200C /* Pods-Chizu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chizu.release.xcconfig"; path = "Target Support Files/Pods-Chizu/Pods-Chizu.release.xcconfig"; sourceTree = "<group>"; };
 		7B03285183F96143397FB2EC /* Pods_Chizu.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chizu.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,11 +68,14 @@
 			isa = PBXGroup;
 			children = (
 				010FAF0D22C6AE2D00F2252D /* AppDelegate.swift */,
-				010FAF0F22C6AE2D00F2252D /* ViewController.swift */,
+				01F831C522E8BE99000051AB /* StackViewTestViewController.swift */,
 				010FAF1122C6AE2D00F2252D /* Main.storyboard */,
 				010FAF1422C6AE2D00F2252D /* Assets.xcassets */,
 				010FAF1622C6AE2D00F2252D /* LaunchScreen.storyboard */,
 				010FAF1922C6AE2D00F2252D /* Info.plist */,
+				01DCB81022E24FC2000AD656 /* FloatingPanelContentViewController.swift */,
+				0114CE2422E78DE40020F007 /* MainMapViewController.swift */,
+				0114CE3022E7DD900020F007 /* PerspectiveStackView.swift */,
 			);
 			path = Chizu;
 			sourceTree = "<group>";
@@ -77,7 +86,6 @@
 				08DEB4A2A8CE0588AB526978 /* Pods-Chizu.debug.xcconfig */,
 				2E3CEB4176398EFCC994200C /* Pods-Chizu.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -204,7 +212,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				010FAF1022C6AE2D00F2252D /* ViewController.swift in Sources */,
+				0114CE3122E7DD910020F007 /* PerspectiveStackView.swift in Sources */,
+				01F831C622E8BE99000051AB /* StackViewTestViewController.swift in Sources */,
+				0114CE2522E78DE40020F007 /* MainMapViewController.swift in Sources */,
+				01DCB81122E24FC2000AD656 /* FloatingPanelContentViewController.swift in Sources */,
 				010FAF0E22C6AE2D00F2252D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
