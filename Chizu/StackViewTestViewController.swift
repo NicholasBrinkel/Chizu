@@ -23,7 +23,7 @@ class StackViewTestViewController: UIViewController {
         
         views = makeImageViews()
         
-        stackView =  PerspectiveStackView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - 125)
+        stackView =  PerspectiveStackView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - 100)
             , withStackedViews: views, andSpacing: 80)
         stackView.xOffsetAfterPerspectiveAnimation = 9
         
