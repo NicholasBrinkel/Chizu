@@ -6,14 +6,25 @@
 //  Copyright © 2019 Chizu. All rights reserved.
 //
 
+import SnapKit
 import UIKit
 
+enum AnimationDirection {
+    case `do`
+    case undo
+}
+
 class PerspectiveStackView: UIView {
-    private var stackedViews: [UIView]
+    private var stackedViews = [UIView]()
+    private var stackedPerspectiveViews = [PerspectiveView]()
     var spacing: CGFloat
     var duration: Double = 1
     var timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-    var additionalPerspectiveSplayTransforms = [CATransform3D]()
+    var additionalPerspectiveSplayTransforms = [CATransform3D]() {
+        didSet {
+            updateToFromTransforms()
+        }
+    }
     var xOffsetAfterPerspectiveAnimation: CGFloat = 0.0
     
     var perspectiveTransform: CATransform3D = {
@@ -23,37 +34,32 @@ class PerspectiveStackView: UIView {
         
         let transform = CATransform3DRotate(CATransform3DIdentity, degToRad(65), 1, 0, 0)
         return CATransform3DRotate(transform, degToRad(50), 0, 0, 1)
-    }()
+        }() {
+        didSet {
+            updateToFromTransforms()
+        }
+    }
     
     private var originalPerspectiveValues = [CATransform3D]()
-    private var shiftedPerspectiveValues = [CATransform3D]()
-    private var originalPositionValues = [CGPoint]()
-    private var splayedPositionValues = [CGPoint]()
+//    private var shiftedPerspectiveValues = [CATransform3D]()
+//    private var originalPositionValues = [CGPoint]()
+//    private var splayedPositionValues = [CGPoint]()
     
     private enum Property {
         case transform
         case position
     }
     
-    private enum AnimationDirection {
-        case `do`
-        case undo
-    }
-    
     init(frame: CGRect, withStackedViews views: [UIView], andSpacing spacing: CGFloat) {
-        
-        self.stackedViews = views
         self.spacing = spacing
         self.originalPerspectiveValues = views.map({ $0.layer.transform })
-        self.shiftedPerspectiveValues = views.map({ $0.layer.transform })
-        
-        self.originalPositionValues = views.map({ $0.layer.position })
+//        self.shiftedPerspectiveValues = views.map({ $0.layer.transform })
+//
+//        self.originalPositionValues = views.map({ $0.layer.position })
         
         super.init(frame: frame)
         
-        for stackedView in self.stackedViews {
-            self.addSubview(stackedView)
-        }
+        views.map({ self.add(view: $0) })
         
         centerStartingPositions()
     }
@@ -76,32 +82,32 @@ class PerspectiveStackView: UIView {
     
     
     func perspectiveShiftAllViews() {
-        let combinedTransforms = combineAllTransforms()
-        shiftedPerspectiveValues = shiftedPerspectiveValues.map({ _ in combinedTransforms })
+        updateToFromTransforms()
         
         CATransaction.begin()
-        self.stackedViews.map({ self.addPerspectiveAnimation(to: $0.layer, for: .do)})
+        self.stackedPerspectiveViews.map({ self.addPerspectiveAnimation(to: $0.layer, for: .do)})
         CATransaction.commit()
     }
     
     func perspectiveShift(view: UIView) {
-        let index = self.stackedViews.firstIndex(of: view)!
-        shiftedPerspectiveValues[index] = combineAllTransforms()
+        let i = index(of: view)
         
         CATransaction.begin()
-        addPerspectiveAnimation(to: view.layer, for: .do)
+        addPerspectiveAnimation(to: stackedPerspectiveViews[i].layer, for: .do)
         CATransaction.commit()
     }
     
     func undoPerspectiveShift(for view: UIView) {
+        let i = index(of: view)
+        
         CATransaction.begin()
-        addPerspectiveAnimation(to: view.layer, for: .undo)
+        addPerspectiveAnimation(to: stackedPerspectiveViews[i].layer, for: .undo)
         CATransaction.commit()
     }
     
     func undoAllPerspectiveShifts() {
         CATransaction.begin()
-        self.stackedViews.map({ self.addPerspectiveAnimation(to: $0.layer, for: .undo)})
+        self.stackedPerspectiveViews.map({ self.addPerspectiveAnimation(to: $0.layer, for: .undo)})
         CATransaction.commit()
     }
     
@@ -123,30 +129,30 @@ class PerspectiveStackView: UIView {
     /*-----------------------------------------------------------*/
     
     func splayAllViews() {
-        self.splayedPositionValues = makeSplayPositions(stackedViews.count, origin: center, spacing: spacing)
-        
         CATransaction.begin()
-        self.stackedViews.map({ self.addPositionAnimation(to: $0.layer, for: .do)})
+        self.stackedPerspectiveViews.map({ self.addPositionAnimation(to: $0.layer, for: .do)})
         CATransaction.commit()
     }
     
     func moveToSplayedPosition(_ view: UIView) {
-        self.splayedPositionValues = makeSplayPositions(stackedViews.count, origin: center, spacing: spacing)
+        let i = index(of: view)
         
         CATransaction.begin()
-        addPositionAnimation(to: view.layer, for: .do)
+        addPositionAnimation(to: stackedPerspectiveViews[i].layer, for: .do)
         CATransaction.commit()
     }
     
     func moveToUnsplayedPosition(_ view: UIView) {
+        let i = index(of: view)
+        
         CATransaction.begin()
-        addPositionAnimation(to: view.layer, for: .undo)
+        addPositionAnimation(to: stackedPerspectiveViews[i].layer, for: .undo)
         CATransaction.commit()
     }
     
     func unsplayAllViews() {
         CATransaction.begin()
-        self.stackedViews.map({ self.addPositionAnimation(to: $0.layer, for: .undo)})
+        self.stackedPerspectiveViews.map({ self.addPositionAnimation(to: $0.layer, for: .undo)})
         CATransaction.commit()
     }
     
@@ -169,20 +175,15 @@ class PerspectiveStackView: UIView {
     
     
     func perspectiveSplayAllViews() {
-        splayedPositionValues = makeSplayPositions(stackedViews.count, origin: center, spacing: spacing)
-        shiftedPerspectiveValues.removeAll()
-        
         CATransaction.begin()
         
-        stackedViews.enumerated().map { (i: Int, stackedView: UIView) in
-            let fromPosition = originalPositionValues[i], toPosition = splayedPositionValues[i]
-            let fromTransform = originalPerspectiveValues[i], toTransform = combineAllTransforms()
+        stackedPerspectiveViews.enumerated().map { (i: Int, stackedView: PerspectiveView) in
+            let fromPosition = stackedView.positionValue(.undo), toPosition = stackedView.positionValue(.do)
+            let fromTransform = stackedView.transformValue(.undo), toTransform = stackedView.transformValue(.do)
             
             let perspectiveSplayAnimation = makePerspectiveSplayAnimation(from: fromPosition, fromTransform, to: toPosition, toTransform)
             self.set(property: .position, toPosition, forLayer: stackedView.layer)
             self.set(property: .transform, toTransform, forLayer: stackedView.layer)
-            
-            shiftedPerspectiveValues.insert(toTransform, at: i)
             
             stackedView.layer.add(perspectiveSplayAnimation, forKey: nil)
         }
@@ -193,9 +194,9 @@ class PerspectiveStackView: UIView {
     func undoPerspectiveSplays() {
         CATransaction.begin()
         
-        stackedViews.enumerated().map { (i: Int, stackedView: UIView) in
-            let fromPosition = splayedPositionValues[i], toPosition = originalPositionValues[i]
-            let fromTransform = shiftedPerspectiveValues[i], toTransform = originalPerspectiveValues[i]
+        stackedPerspectiveViews.enumerated().map { (i: Int, stackedView: PerspectiveView) in
+            let fromPosition = stackedView.positionValue(.do), toPosition = stackedView.positionValue(.undo)
+            let fromTransform = stackedView.transformValue(.do), toTransform = stackedView.transformValue(.undo)
             
             let perspectiveSplayAnimation = makePerspectiveSplayAnimation(from: fromPosition, fromTransform, to: toPosition, toTransform)
             self.set(property: .position, toPosition, forLayer: stackedView.layer)
@@ -248,34 +249,34 @@ class PerspectiveStackView: UIView {
     /*-----------------------------------------------------------*/
     
     private func addPerspectiveAnimation(to layer: CALayer, for direction: AnimationDirection) {
-        let i = stackedViews.firstIndex(where: { $0.layer == layer })!
+        let i = stackedPerspectiveViews.firstIndex(where: { $0.layer == layer })!
         
         switch direction {
         case .do:
-            let perspectiveAnimation = makePerspectiveAnimation(from: originalPerspectiveValues[i], to: shiftedPerspectiveValues[i])
-            self.set(property: .transform, shiftedPerspectiveValues[i], forLayer: layer)
+            let perspectiveAnimation = makePerspectiveAnimation(from: stackedPerspectiveViews[i].transformValue(.undo), to: stackedPerspectiveViews[i].transformValue(.do))
+            self.set(property: .transform, stackedPerspectiveViews[i].transformValue(.do), forLayer: layer)
             
             layer.add(perspectiveAnimation, forKey: "transform")
         case .undo:
-            let perspectiveAnimation = makePerspectiveAnimation(from: shiftedPerspectiveValues[i], to: originalPerspectiveValues[i])
-            self.set(property: .transform, originalPerspectiveValues[i], forLayer: layer)
+            let perspectiveAnimation = makePerspectiveAnimation(from: stackedPerspectiveViews[i].transformValue(.do), to: stackedPerspectiveViews[i].transformValue(.undo))
+            self.set(property: .transform, stackedPerspectiveViews[i].transformValue(.undo), forLayer: layer)
             
             layer.add(perspectiveAnimation, forKey: "transform")
         }
     }
     
     private func addPositionAnimation(to layer: CALayer, for direction: AnimationDirection) {
-        let i = stackedViews.firstIndex(where: { $0.layer == layer })!
+        let i = stackedPerspectiveViews.firstIndex(where: { $0.layer == layer })!
         
         switch direction {
         case .do:
-            let positionAnimation = makePositionAnimation(from: originalPositionValues[i], to: splayedPositionValues[i])
-            self.set(property: .position, splayedPositionValues[i], forLayer: layer)
+            let positionAnimation = makePositionAnimation(from: stackedPerspectiveViews[i].positionValue(.undo), to: stackedPerspectiveViews[i].positionValue(.do))
+            self.set(property: .position, stackedPerspectiveViews[i].positionValue(.do), forLayer: layer)
             
             layer.add(positionAnimation, forKey: "position")
         case .undo:
-            let positionAnimation = makePositionAnimation(from: splayedPositionValues[i], to: originalPositionValues[i])
-            self.set(property: .position, originalPositionValues[i], forLayer: layer)
+            let positionAnimation = makePositionAnimation(from: stackedPerspectiveViews[i].positionValue(.do), to: stackedPerspectiveViews[i].positionValue(.undo))
+            self.set(property: .position, stackedPerspectiveViews[i].positionValue(.undo), forLayer: layer)
             
             layer.add(positionAnimation, forKey: "position")
         }
@@ -334,8 +335,8 @@ class PerspectiveStackView: UIView {
     }
     
     private func centerStartingPositions() {
-        self.stackedViews.map({ $0.layer.position = self.layer.position })
-        self.originalPositionValues = stackedViews.map({ $0.layer.position })
+        self.stackedPerspectiveViews.map({ $0.layer.position = self.layer.position })
+        updateToFromPositions()
     }
     
     
@@ -344,16 +345,68 @@ class PerspectiveStackView: UIView {
         // If the view isn't alredy in the stack, add it.
         guard (!self.stackedViews.contains(view)) else { return }
         
+        let perspectiveView = makePerspectiveViewWith(view)
         self.stackedViews.insert(view, at: i)
-        self.insertSubview(view, at: i)
+        self.stackedPerspectiveViews.insert(perspectiveView, at: i)
+        
+        insertSubview(perspectiveView, at: i)
+        perspectiveView.snp.makeConstraints { (make) in
+            make.top.bottom.leading.trailing.equalToSuperview()
+            make.center.equalToSuperview()
+        }
+        
+        updateToFromPositions()
     }
     
     func add(view: UIView) {
         // If the view isn't alredy in the stack, add it.
         guard (!self.stackedViews.contains(view)) else { return }
         
+        let perspectiveView = makePerspectiveViewWith(view)
+        self.stackedPerspectiveViews.append(perspectiveView)
         self.stackedViews.append(view)
-        self.addSubview(view)
+        
+        addSubview(perspectiveView)
+        perspectiveView.snp.makeConstraints { (make) in
+            make.top.bottom.leading.trailing.equalToSuperview()
+            make.center.equalToSuperview()
+        }
+        
+        updateToFromPositions()
+    }
+    
+    private func makePerspectiveViewWith(_ view: UIView) -> PerspectiveView {
+        let perspectiveView = PerspectiveView(frame: view.frame)
+        
+        perspectiveView.addSubview(view)
+        view.snp.makeConstraints { (make) in
+            make.top.bottom.leading.trailing.equalToSuperview()
+            make.center.equalToSuperview()
+        }
+        
+        return perspectiveView
+    }
+    
+    private func updateToFromPositions() {
+        let splayPositions = makeSplayPositions(stackedPerspectiveViews.count, origin: layer.position, spacing: spacing)
+        
+        stackedPerspectiveViews.enumerated().map { (i: Int, view: PerspectiveView) in
+            view.fromPositionValue = view.layer.position
+            view.toPositionValue = splayPositions[i]
+        }
+    }
+    
+    private func updateToFromTransforms() {
+        let toTransform = combineAllTransforms()
+        
+        stackedPerspectiveViews.enumerated().map { (i: Int, view: PerspectiveView) in
+            view.fromTransformValue = originalPerspectiveValues[i]
+            view.toTransformValue = toTransform
+        }
+    }
+    
+    func index(of view: UIView) -> Int {
+        return stackedViews.firstIndex(of: view)!
     }
     
     func remove(view: UIView) {
