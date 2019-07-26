@@ -10,7 +10,7 @@ import UIKit
 
 class StackViewTestViewController: UIViewController {
     var stackView: PerspectiveStackView!
-    let floors = [UIImage(named: "floor1")!, UIImage(named: "floor2")!, UIImage(named: "floor3")!, UIImage(named: "floor4")!, UIImage(named: "floor5")!]
+    let floors = [UIImage(named: "floor1")!, UIImage(named: "floor2")!, UIImage(named: "floor3")!, UIImage(named: "floor4")!]//, UIImage(named: "floor5")!]
     
     var moveNum = 0
     var moveAllNum = 0
@@ -50,11 +50,11 @@ class StackViewTestViewController: UIViewController {
     }
     
     @IBAction func splayOne(_ sender: Any) {
-        
+        stackView.moveToSplayedPositionWithPerspective(views[3])
     }
     
     @IBAction func unsplayOne(_ sender: Any) {
-        
+        stackView.moveToUnsplayedPositionWithPerspective(views[3])
     }
     
     @IBAction func moveOne(_ sender: Any) {
@@ -81,6 +81,8 @@ class StackViewTestViewController: UIViewController {
         return (num % 2 == 0)
     }
 }
+
+
 
 extension UIImage {
     

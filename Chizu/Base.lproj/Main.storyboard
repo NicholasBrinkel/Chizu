@@ -190,7 +190,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Splay One"/>
                                         <connections>
-                                            <action selector="splayOne:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bdB-JR-a77"/>
+                                            <action selector="splayOne:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lmf-5A-f6V"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fr2-l3-2If">
@@ -198,7 +198,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Unsplay One"/>
                                         <connections>
-                                            <action selector="unsplayIOne:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7fR-Yn-xuk"/>
+                                            <action selector="unsplayOne:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gkh-wx-BvS"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="84U-Hb-B9p">
