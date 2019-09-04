@@ -18,7 +18,8 @@ class MainMapViewController: UIViewController {
         fpc = FloatingPanelController()
         fpc.delegate = self
         
-        let contentView = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController")
+        let contentView = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController") as! FloatingPanelContentViewController
+        contentView.parentVC = self
         fpc.set(contentViewController: contentView)
         
         fpc.addPanel(toParent: self)
@@ -38,5 +39,31 @@ class MainMapViewController: UIViewController {
 }
 
 extension MainMapViewController: FloatingPanelControllerDelegate {
+        func floatingPanel(_ vc: FloatingPanelController, layoutFor newCollection: UITraitCollection) -> FloatingPanelLayout? {
+            return MyFloatingPanelLayout()
+    }
     
+    class MyFloatingPanelLayout: FloatingPanelLayout {
+        public var initialPosition: FloatingPanelPosition {
+            return .tip
+        }
+        
+        public func insetFor(position: FloatingPanelPosition) -> CGFloat? {
+            switch position {
+            case .full: return 18.0
+            case .half: return 255.0 // A bottom inset from the safe area
+            case .tip: return 140 // A bottom inset from the safe area
+            default: return nil // Or `case .hidden: return nil`
+            }
+        }
+    }
+}
+
+extension MainMapViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // if indexPath.row == 1 {
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.performSegue(withIdentifier: "showSplayDemo", sender: self)
+        // }
+    }
 }

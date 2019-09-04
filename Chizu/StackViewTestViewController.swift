@@ -10,8 +10,9 @@ import UIKit
 
 class StackViewTestViewController: UIViewController {
     var stackView: PerspectiveStackView!
-    let floors = [UIImage(named: "floor1")!, UIImage(named: "floor2")!, UIImage(named: "floor3")!, UIImage(named: "floor4")!, UIImage(named: "floor5")!]
+    let floors = [UIImage(named: "floor1")!, UIImage(named: "floor2")!, UIImage(named: "floor3")!, UIImage(named: "floor4")!]//, UIImage(named: "floor5")!]
     
+    @IBOutlet weak var done: UIButton!
     var moveNum = 0
     var moveAllNum = 0
     var transformNum = 0
@@ -23,19 +24,26 @@ class StackViewTestViewController: UIViewController {
         
         views = makeImageViews()
         
-        stackView =  PerspectiveStackView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - 100)
+        stackView =  PerspectiveStackView(frame: CGRect()
             , withStackedViews: views, andSpacing: 80)
-        stackView.xOffsetAfterPerspectiveAnimation = 9
+        stackView.xOffsetAfterPerspectiveAnimation = 0
         
         self.view.addSubview(stackView)
         stackView.additionalPerspectiveSplayTransforms = [CATransform3DMakeScale(0.63, 0.63, 1)]
+        view.bringSubviewToFront(done)
+        
+        stackView.snp.makeConstraints { (make) in
+            make.leftMargin.rightMargin.top.equalToSuperview()
+            make.bottomMargin.equalToSuperview().offset(-100)
+        }
     }
     
     func makeImageViews() -> [UIView] {
         return floors.map({
             let image = UIImageView(image: $0.imageRotatedByDegrees(degrees: 90))
-            image.contentMode = .scaleAspectFill
+            image.contentMode = .scaleAspectFit
             image.frame = self.view.frame.insetBy(dx: 0, dy: 100)
+            print(image.layer.transform)
             
             return image
         })
@@ -50,11 +58,11 @@ class StackViewTestViewController: UIViewController {
     }
     
     @IBAction func splayOne(_ sender: Any) {
-        
+        stackView.moveToSplayedPositionWithPerspective(views[3])
     }
     
     @IBAction func unsplayOne(_ sender: Any) {
-        
+        stackView.moveToUnsplayedPositionWithPerspective(views[3])
     }
     
     @IBAction func moveOne(_ sender: Any) {
@@ -77,10 +85,16 @@ class StackViewTestViewController: UIViewController {
         transformAllNum += 1
     }
     
+    @IBAction func donePressed(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func isEven(_ num: Int) -> Bool {
         return (num % 2 == 0)
     }
 }
+
+
 
 extension UIImage {
     
