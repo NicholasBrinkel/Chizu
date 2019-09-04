@@ -123,8 +123,8 @@ public class FloatingPanelDefaultLandscapeLayout: FloatingPanelLayout {
 
     public func insetFor(position: FloatingPanelPosition) -> CGFloat? {
         switch position {
-        case .full: return 16.0
-        case .tip: return 69.0
+        case .full: return 10
+        case .tip: return 10
         default: return nil
         }
     }
