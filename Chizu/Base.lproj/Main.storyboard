@@ -291,20 +291,30 @@
                                     <action selector="donePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="W6M-4K-Mv3"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M8i-Ae-lMc">
+                                <rect key="frame" x="8" y="44" width="80" height="30"/>
+                                <state key="normal" title="Draw Route"/>
+                                <connections>
+                                    <action selector="draw:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lmq-pF-XZn"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="OgI-Ex-Kxd" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="24" id="32C-Op-69I"/>
                             <constraint firstItem="eM0-z1-8kj" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="4p6-4m-0g3"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="eM0-z1-8kj" secondAttribute="bottom" id="DAT-Sr-iAG"/>
+                            <constraint firstItem="M8i-Ae-lMc" firstAttribute="top" secondItem="OgI-Ex-Kxd" secondAttribute="top" id="KcU-NQ-afl"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="eM0-z1-8kj" secondAttribute="trailing" id="hwr-fa-FKU"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="OgI-Ex-Kxd" secondAttribute="trailing" constant="24" id="lhC-bI-flv"/>
+                            <constraint firstItem="M8i-Ae-lMc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="sou-Le-4D6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="FYt-kU-ZOp"/>
                     <connections>
                         <outlet property="done" destination="OgI-Ex-Kxd" id="Zeo-vA-UEd"/>
+                        <outlet property="drawButton" destination="M8i-Ae-lMc" id="ehK-XT-UJ6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
