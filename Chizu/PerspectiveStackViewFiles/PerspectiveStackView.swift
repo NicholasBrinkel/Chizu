@@ -250,6 +250,27 @@ class PerspectiveStackView: UIView {
     }
     
     
+    func addPath(forRoute route: Route, toIndex i: Int) {
+        let pathCreator = PathCreator()
+        let path = pathCreator.createPath(fromPoints: Grid.shared.getPointsForRoute(route))
+        let pathLayer = pathCreator.makePathLayer(withPath: path, withAnimationTimingFunctionName: .easeIn, styleProvider: .none)
+        pathLayer.fillColor = nil
+        
+        stackedPerspectiveViews[i].layer.addSublayer(pathLayer)
+        
+                let animation =  CABasicAnimation(keyPath: "strokeEnd")
+        animation.fromValue = 0
+                animation.toValue = 1
+                animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                animation.duration = 2
+        
+                CATransaction.begin()
+                pathLayer.add(animation, forKey: "line")
+            pathLayer.strokeEnd = 1
+                CATransaction.commit()
+    }
+    
+    
     // MARK: PerspectiveView updating helper functions
     /*-----------------------------------------------------------*/
     

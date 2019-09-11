@@ -10,9 +10,11 @@ import UIKit
 
 class StackViewTestViewController: UIViewController {
     var stackView: PerspectiveStackView!
-    let floors = [UIImage(named: "floor1")!, UIImage(named: "floor2")!, UIImage(named: "floor3")!, UIImage(named: "floor4")!]//, UIImage(named: "floor5")!]
+    let floors = [UIImage(named: "floor1")!, UIImage(named: "floor2")!, UIImage(named: "floor3")!, UIImage(named: "floor4")!, UIImage(named: "floor5")!]
     
     @IBOutlet weak var done: UIButton!
+    @IBOutlet weak var drawButton: UIButton!
+    
     var moveNum = 0
     var moveAllNum = 0
     var transformNum = 0
@@ -30,7 +32,9 @@ class StackViewTestViewController: UIViewController {
         
         self.view.addSubview(stackView)
         stackView.additionalPerspectiveSplayTransforms = [CATransform3DMakeScale(0.63, 0.63, 1)]
+        
         view.bringSubviewToFront(done)
+        view.bringSubviewToFront(drawButton)
         
         stackView.snp.makeConstraints { (make) in
             make.leftMargin.rightMargin.top.equalToSuperview()
@@ -47,6 +51,22 @@ class StackViewTestViewController: UIViewController {
             
             return image
         })
+    }
+    
+    @IBAction func draw(_ sender: Any) {
+        
+        if Grid.shared.device == nil {
+            
+            let alert = UIAlertController(title: "\(UIDevice.modelName) isn't yet Supported", message: "This device hasn't had its maps tuned to fit it. Routes may not match up to map properly.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [alert] (action) in
+                alert.dismiss(animated: true, completion: nil)
+            }))
+            
+            self.present(alert, animated: true)
+        }
+        
+        stackView.addPath(forRoute: Grid.Example1.fifthFlor, toIndex: 4)
+        stackView.addPath(forRoute: Grid.Example1.secondFloor, toIndex: 1)
     }
     
     @IBAction func splayAll(_ sender: Any) {
