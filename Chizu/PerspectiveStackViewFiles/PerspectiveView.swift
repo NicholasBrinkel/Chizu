@@ -15,18 +15,15 @@ class PerspectiveView: UIView {
     var toPositionValue: CGPoint!
     var fromPositionValue: CGPoint!
     
-    var currentPositionState: AnimationDirection = .unAnimated
-    var currentTransformState: AnimationDirection = .unAnimated
-    
-    var prevPositionState: AnimationDirection = .unAnimated
-    var prevTransformState: AnimationDirection = .unAnimated
+    var currentState: AnimationState = AnimationState(position: .unAnimated, transform: .unAnimated)
+    var previousState: AnimationState = AnimationState(position: .unAnimated, transform: .unAnimated)
     
     
     /*----------------*/
     
     
     func transformValueForState() -> CATransform3D {
-        switch currentTransformState {
+        switch currentState.transform {
         case .animated:
             return toTransformValue
         case .unAnimated:
@@ -35,32 +32,16 @@ class PerspectiveView: UIView {
     }
     
     func positionValueForState() -> CGPoint {
-        switch currentPositionState {
+        switch currentState.position {
         case .animated:
             return toPositionValue
         case .unAnimated:
             return fromPositionValue
         }
     }
-    
-    /*----------------*/
-    
-    
-    func transformValueForPrevState() -> CATransform3D {
-        switch prevTransformState {
-        case .animated:
-            return toTransformValue
-        case .unAnimated:
-            return fromTransformValue
-        }
-    }
-    
-    func positionValueForPrevState() -> CGPoint {
-        switch prevPositionState {
-        case .animated:
-            return toPositionValue
-        case .unAnimated:
-            return fromPositionValue
-        }
-    }
+}
+
+struct AnimationState {
+    var position: AnimationDirection
+    var transform: AnimationDirection
 }
