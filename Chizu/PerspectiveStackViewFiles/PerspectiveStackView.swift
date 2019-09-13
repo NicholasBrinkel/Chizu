@@ -32,6 +32,26 @@ enum AnimationDirection {
     }
 }
 
+enum AnimationType {
+    case perspectiveShift(UIView)
+    case undoPerspectiveShift(UIView)
+    case perspectiveShiftAllViews
+    case undoAllPerspectiveShifts
+    
+    case splayAllViews
+    case moveToSplayedPosition(UIView)
+    case moveToUnsplayedPosition(UIView)
+    case unsplayAllViews
+    
+    case perspectiveSplayAllViews
+    case moveToSplayedPositionWithPerspective(UIView)
+    case moveToUnsplayedPositionWithPerspective(UIView)
+    case undoPerspectiveSplays
+    
+    case spotlight(UIView)
+    case drawRoute
+}
+
 class PerspectiveStackView: UIView {
     private var stackedViews = [UIView]()
     private var stackedPerspectiveViews = [PerspectiveView]()

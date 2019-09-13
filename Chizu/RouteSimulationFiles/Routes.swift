@@ -9,7 +9,14 @@
 import UIKit
 
 class Routes {
-    static let E2Route = Route(floors: [UIImage(named: "floor1")!, UIImage(named: "floor2")!, UIImage(named: "floor3")!, UIImage(named: "floor4")!, UIImage(named: "floor5")!], routePath: Example1.self)
+    static let E2Route = Route(
+        floors: [UIImage(named: "floor1")!, UIImage(named: "floor2")!, UIImage(named: "floor3")!, UIImage(named: "floor4")!, UIImage(named: "floor5")!],
+        routePath: Example1.self,
+        steps: [
+            Step(isButtonVisible: false, isDirectionLabelVisible: false, directionInstruction: "", animation: .none),
+            Step(isButtonVisible: false, isDirectionLabelVisible: false, directionInstruction: "", animation: <#T##AnimationType?#>)
+        ]
+    )
     
     // Custom routes.
     /// (0, 0) IS THE UPPER LEFT CORNER OF THE CONTENT. NOT the Picture. if the picture is in the shape of a reversed L, extend the highest point
@@ -36,4 +43,5 @@ protocol RoutePath {
 struct Route {
     let floors: [UIImage]
     let routePath: RoutePath.Type
+    let steps: [Step]
 }

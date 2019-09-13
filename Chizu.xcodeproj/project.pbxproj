@@ -15,6 +15,7 @@
 		0114CE3122E7DD910020F007 /* PerspectiveStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0114CE3022E7DD900020F007 /* PerspectiveStackView.swift */; };
 		0129A765232C38290024C342 /* RouteSimulationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0129A764232C38290024C342 /* RouteSimulationViewController.swift */; };
 		0129A767232C38B80024C342 /* Routes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0129A766232C38B80024C342 /* Routes.swift */; };
+		0129A76C232C3CD50024C342 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0129A76B232C3CD50024C342 /* Step.swift */; };
 		012B3125232691E70020F7E0 /* PathCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012B3124232691E70020F7E0 /* PathCreator.swift */; };
 		012B312823285B5C0020F7E0 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012B312723285B5C0020F7E0 /* Grid.swift */; };
 		015F39C722E9227800F8A8B2 /* PerspectiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015F39C622E9227700F8A8B2 /* PerspectiveView.swift */; };
@@ -34,6 +35,7 @@
 		0114CE3022E7DD900020F007 /* PerspectiveStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerspectiveStackView.swift; sourceTree = "<group>"; };
 		0129A764232C38290024C342 /* RouteSimulationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteSimulationViewController.swift; sourceTree = "<group>"; };
 		0129A766232C38B80024C342 /* Routes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routes.swift; sourceTree = "<group>"; };
+		0129A76B232C3CD50024C342 /* Step.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		012B3124232691E70020F7E0 /* PathCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathCreator.swift; sourceTree = "<group>"; };
 		012B312723285B5C0020F7E0 /* Grid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		015F39C622E9227700F8A8B2 /* PerspectiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerspectiveView.swift; sourceTree = "<group>"; };
@@ -77,20 +79,45 @@
 		010FAF0C22C6AE2D00F2252D /* Chizu */ = {
 			isa = PBXGroup;
 			children = (
-				012B312623285B1F0020F7E0 /* PerspectiveStackViewFiles */,
 				010FAF0D22C6AE2D00F2252D /* AppDelegate.swift */,
 				010FAF1122C6AE2D00F2252D /* Main.storyboard */,
 				010FAF1422C6AE2D00F2252D /* Assets.xcassets */,
 				010FAF1622C6AE2D00F2252D /* LaunchScreen.storyboard */,
+				0129A769232C3C8D0024C342 /* PathDrawingFiles */,
+				0129A768232C3C770024C342 /* HomeScreenViewControllers */,
+				012B312623285B1F0020F7E0 /* PerspectiveStackViewFiles */,
+				0129A76A232C3CAE0024C342 /* RouteSimulationFiles */,
 				010FAF1922C6AE2D00F2252D /* Info.plist */,
-				01DCB81022E24FC2000AD656 /* FloatingPanelContentViewController.swift */,
-				0114CE2422E78DE40020F007 /* MainMapViewController.swift */,
-				012B3124232691E70020F7E0 /* PathCreator.swift */,
-				012B312723285B5C0020F7E0 /* Grid.swift */,
-				0129A764232C38290024C342 /* RouteSimulationViewController.swift */,
-				0129A766232C38B80024C342 /* Routes.swift */,
 			);
 			path = Chizu;
+			sourceTree = "<group>";
+		};
+		0129A768232C3C770024C342 /* HomeScreenViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				0114CE2422E78DE40020F007 /* MainMapViewController.swift */,
+				01DCB81022E24FC2000AD656 /* FloatingPanelContentViewController.swift */,
+			);
+			path = HomeScreenViewControllers;
+			sourceTree = "<group>";
+		};
+		0129A769232C3C8D0024C342 /* PathDrawingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				012B3124232691E70020F7E0 /* PathCreator.swift */,
+				012B312723285B5C0020F7E0 /* Grid.swift */,
+			);
+			path = PathDrawingFiles;
+			sourceTree = "<group>";
+		};
+		0129A76A232C3CAE0024C342 /* RouteSimulationFiles */ = {
+			isa = PBXGroup;
+			children = (
+				0129A764232C38290024C342 /* RouteSimulationViewController.swift */,
+				0129A766232C38B80024C342 /* Routes.swift */,
+				0129A76B232C3CD50024C342 /* Step.swift */,
+			);
+			path = RouteSimulationFiles;
 			sourceTree = "<group>";
 		};
 		012B312623285B1F0020F7E0 /* PerspectiveStackViewFiles */ = {
@@ -235,6 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0129A76C232C3CD50024C342 /* Step.swift in Sources */,
 				0114CE3122E7DD910020F007 /* PerspectiveStackView.swift in Sources */,
 				01F831C622E8BE99000051AB /* StackViewTestViewController.swift in Sources */,
 				012B3125232691E70020F7E0 /* PathCreator.swift in Sources */,
