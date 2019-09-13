@@ -250,9 +250,9 @@ class PerspectiveStackView: UIView {
     }
     
     
-    func addPath(forRoute route: Route, toIndex i: Int) {
+    func addPath(forRoute routePath: RoutePath, toIndex i: Int) {
         let pathCreator = PathCreator()
-        let path = pathCreator.createPath(fromPoints: Grid.shared.getPointsForRoute(route))
+        let path = pathCreator.createPath(fromPoints: Grid.shared.getPointsForRoute(routePath))
         let pathLayer = pathCreator.makePathLayer(withPath: path, withAnimationTimingFunctionName: .easeIn, styleProvider: .none)
         pathLayer.fillColor = nil
         
