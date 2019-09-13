@@ -56,7 +56,6 @@
 			isa = PBXGroup;
 			children = (
 				010FAF0C22C6AE2D00F2252D /* Chizu */,
-				010FAF0B22C6AE2D00F2252D /* Products */,
 				27E781380ADC8765061BFED5 /* Pods */,
 				36B78B80C033C87B5702BA5A /* Frameworks */,
 			);
@@ -68,6 +67,7 @@
 				010FAF0A22C6AE2D00F2252D /* Chizu.app */,
 			);
 			name = Products;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		010FAF0C22C6AE2D00F2252D /* Chizu */ = {
@@ -77,6 +77,7 @@
 				010FAF0D22C6AE2D00F2252D /* AppDelegate.swift */,
 				010FAF1122C6AE2D00F2252D /* Main.storyboard */,
 				010FAF1422C6AE2D00F2252D /* Assets.xcassets */,
+				010FAF0B22C6AE2D00F2252D /* Products */,
 				010FAF1622C6AE2D00F2252D /* LaunchScreen.storyboard */,
 				010FAF1922C6AE2D00F2252D /* Info.plist */,
 				01DCB81022E24FC2000AD656 /* FloatingPanelContentViewController.swift */,

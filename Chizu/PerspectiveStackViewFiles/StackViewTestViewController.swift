@@ -19,6 +19,7 @@ class StackViewTestViewController: UIViewController {
     var moveAllNum = 0
     var transformNum = 0
     var transformAllNum = 0
+    var spotlightNum = 0
     var views: [UIView]!
     
     override func viewDidLoad() {
@@ -26,9 +27,9 @@ class StackViewTestViewController: UIViewController {
         
         views = makeImageViews()
         
-        stackView =  PerspectiveStackView(frame: CGRect()
+        stackView =  PerspectiveStackView(frame: CGRect(x: self.view.frame.minX, y: self.view.frame.minY, width: self.view.frame.width, height: self.view.frame.height)
             , withStackedViews: views, andSpacing: 80)
-        stackView.xOffsetAfterPerspectiveAnimation = 0
+        //stackView.xOffsetAfterPerspectiveAnimation = 0
         
         self.view.addSubview(stackView)
         stackView.additionalPerspectiveSplayTransforms = [CATransform3DMakeScale(0.63, 0.63, 1)]
@@ -103,6 +104,11 @@ class StackViewTestViewController: UIViewController {
     @IBAction func transformAll(_ sender: Any) {
         isEven(transformAllNum) ? stackView.perspectiveShiftAllViews() : stackView.undoAllPerspectiveShifts()
         transformAllNum += 1
+    }
+    
+    @IBAction func spotlight(_ sender: Any) {
+        isEven(spotlightNum) ? stackView.spotlight(views[1]) : stackView.undoSpotlightAnimation()
+        spotlightNum += 1
     }
     
     @IBAction func donePressed(_ sender: Any) {

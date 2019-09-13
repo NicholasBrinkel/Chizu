@@ -14,6 +14,8 @@ enum SupportedDevice: String {
     case XSMaxSim = "Simulator iPhone XS Max"
     case iPad_6 = "iPad 6"
     case iPad_6Sim = "Simulator iPad 6"
+    case XR = "iPhone XR"
+    case XRSim = "Simulator iPhone XR"
 }
 
 protocol Route {
@@ -45,7 +47,7 @@ class Grid {
         func getRoute() -> [Cell] {
             switch self {
             case .fifthFlor:
-                return [Cell(x: 40.5, y: 40.5), Cell(x: 40.5, y: 37), Cell(x: 33, y: 37), Cell(x: 33, y: 84), Cell(x: 23, y: 84), Cell(x: 23, y: 90)]
+                return [Cell(x: 0, y: 0), Cell(x: Grid.shared.xMax, y: Grid.shared.yMax), Cell(x: 40.5, y: 40.5), Cell(x: 40.5, y: 37), Cell(x: 33, y: 37), Cell(x: 33, y: 84), Cell(x: 23, y: 84), Cell(x: 23, y: 90)]
             case .secondFloor:
                 return [Cell(x: 23.4, y: 90), Cell(x: 23.4, y: 84), Cell(x: 14.5, y: 84), Cell(x: 14.5, y: 131), Cell(x: 2, y: 131)/*, Cell(x: 5.5, y: 26)*/]
             }
@@ -72,23 +74,32 @@ class Grid {
     }
     
     func getPointsForRoute(_ route: Route) -> [CGPoint] {
-        switch device {
-        case .XSMax?, .XSMaxSim?:
-            xDistanceFromLeftEdgeToContent = 40.5
-            yDistanceFromTopEdgeToContent = 34
-            
-            let xScaleFactor: CGFloat = 3.1
-            let yScaleFactor: CGFloat = 3.03
-            return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
-        case .iPad_6?, .iPad_6Sim?:
-            xDistanceFromLeftEdgeToContent = 43.5
-            yDistanceFromTopEdgeToContent = 5
-            
-            let xScaleFactor: CGFloat = 5.65
-            let yScaleFactor: CGFloat = 5.35
-            return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
-        default:
-            xDistanceFromLeftEdgeToContent = 40.5
+        if let device = device {
+            switch device {
+            case .XSMax, .XSMaxSim:
+                xDistanceFromLeftEdgeToContent = 40.5
+                yDistanceFromTopEdgeToContent = 34
+                
+                let xScaleFactor: CGFloat = 3.1
+                let yScaleFactor: CGFloat = 3.03
+                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            case .iPad_6, .iPad_6Sim:
+                xDistanceFromLeftEdgeToContent = 41.5
+                yDistanceFromTopEdgeToContent = 4.75
+                
+                let xScaleFactor: CGFloat = 5.8
+                let yScaleFactor: CGFloat = 5.75
+                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            case .XR, .XRSim:
+                xDistanceFromLeftEdgeToContent = 41.5
+                yDistanceFromTopEdgeToContent = 41
+                
+                let xScaleFactor: CGFloat = 3.1
+                let yScaleFactor: CGFloat = 3.03
+                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            }
+        } else {
+            xDistanceFromLeftEdgeToContent = 43
             yDistanceFromTopEdgeToContent = 34
             
             let xScaleFactor: CGFloat = 3.1
