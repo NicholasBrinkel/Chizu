@@ -36,6 +36,12 @@ class MainMapViewController: UIViewController {
         
         fpc.removePanelFromParent(animated: animated)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showNavDemo" {
+            (segue.destination as! RouteSimulationViewController).configureWithRoute(Routes.E2Route)
+        }
+    }
 }
 
 extension MainMapViewController: FloatingPanelControllerDelegate {
@@ -63,7 +69,8 @@ extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // if indexPath.row == 1 {
         tableView.deselectRow(at: indexPath, animated: true)
-        self.performSegue(withIdentifier: "showSplayDemo", sender: self)
+        
+        self.performSegue(withIdentifier: "showNavDemo", sender: self)
         // }
     }
 }

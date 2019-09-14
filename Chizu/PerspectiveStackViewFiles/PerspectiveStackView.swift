@@ -33,6 +33,7 @@ enum AnimationDirection {
 }
 
 enum AnimationType {
+    
     case perspectiveShift(UIView)
     case undoPerspectiveShift(UIView)
     case perspectiveShiftAllViews
@@ -49,7 +50,9 @@ enum AnimationType {
     case undoPerspectiveSplays
     
     case spotlight(UIView)
-    case drawRoute
+    case undoSpotlight
+    case drawSegment(Segment)
+    case drawAllSegments(RoutePath)
 }
 
 class PerspectiveStackView: UIView {
@@ -317,13 +320,19 @@ class PerspectiveStackView: UIView {
     }
     
     
-    func addPath(forRoute routePath: RoutePath, toIndex i: Int) {
+    func drawAllRouteSegments(forRoutePath routePath: RoutePath) {
+        for segment in routePath.segments {
+            drawRoute(forSegment: segment)
+        }
+    }
+    
+    func drawRoute(forSegment segment: Segment) {
         let pathCreator = PathCreator()
-        let path = pathCreator.createPath(fromPoints: Grid.shared.getPointsForRoute(routePath))
+        let path = pathCreator.createPath(fromPoints: Grid.shared.getPointsForSegment(segment))
         let pathLayer = pathCreator.makePathLayer(withPath: path, withAnimationTimingFunctionName: .easeIn, styleProvider: .none)
         pathLayer.fillColor = nil
         
-        stackedPerspectiveViews[i].layer.addSublayer(pathLayer)
+        perspectiveViewForView(view: segment.view).layer.addSublayer(pathLayer)
         
                 let animation =  CABasicAnimation(keyPath: "strokeEnd")
         animation.fromValue = 0
@@ -558,7 +567,10 @@ class PerspectiveStackView: UIView {
     func add(view: UIView) {
         addView(view: view)
         
+        originalPositionValues.append(view.layer.position)
+        
         updateToFromPositions()
+        updateToFromTransforms()
     }
     
     private func addView(view: UIView) {

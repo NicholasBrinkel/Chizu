@@ -52,7 +52,7 @@ class Grid {
         return Cell(x: (cell.x + xDistanceFromLeftEdgeToContent), y: (cell.y + yDistanceFromTopEdgeToContent))
     }
     
-    func getPointsForRoute(_ route: Route) -> [CGPoint] {
+    func getPointsForSegment(_ segment: Segment) -> [CGPoint] {
         if let device = device {
             switch device {
             case .XSMax, .XSMaxSim:
@@ -61,21 +61,21 @@ class Grid {
                 
                 let xScaleFactor: CGFloat = 3.1
                 let yScaleFactor: CGFloat = 3.03
-                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .iPad_6, .iPad_6Sim:
                 xDistanceFromLeftEdgeToContent = 41.5
                 yDistanceFromTopEdgeToContent = 4.75
                 
                 let xScaleFactor: CGFloat = 5.8
                 let yScaleFactor: CGFloat = 5.75
-                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .XR, .XRSim:
                 xDistanceFromLeftEdgeToContent = 41.5
                 yDistanceFromTopEdgeToContent = 41
                 
                 let xScaleFactor: CGFloat = 3.1
                 let yScaleFactor: CGFloat = 3.03
-                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             }
         } else {
             xDistanceFromLeftEdgeToContent = 43
@@ -83,7 +83,7 @@ class Grid {
             
             let xScaleFactor: CGFloat = 3.1
             let yScaleFactor: CGFloat = 3.03
-            return route.getRoutePathPoints().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
         }
     }
 }

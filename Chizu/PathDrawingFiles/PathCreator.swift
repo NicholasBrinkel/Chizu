@@ -10,7 +10,7 @@ import UIKit
 
 class PathCreator: NSObject {
     
-    let defaultPathStyle = PathStyleProvider(strokeEnd: 0, lineWidth: 1, strokeColor: UIColor(red: 200/255, green: 73/255, blue: 56/255, alpha: 1).cgColor, fillColor: nil, opacity: 1)
+    let defaultPathStyle = PathStyleProvider(strokeEnd: 0, lineWidth: 4, strokeColor: UIColor(red: 200/255, green: 73/255, blue: 56/255, alpha: 1).cgColor, fillColor: nil, opacity: 1)
     
     override init() {
         super.init()
