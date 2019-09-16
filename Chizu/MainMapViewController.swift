@@ -51,8 +51,8 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
         public func insetFor(position: FloatingPanelPosition) -> CGFloat? {
             switch position {
             case .full: return 18.0
-            case .half: return 255.0 // A bottom inset from the safe area
-            case .tip: return 140 // A bottom inset from the safe area
+            case .half: return UIScreen.main.bounds.height / 2.0 // A bottom inset from the safe area
+            case .tip: return UIScreen.main.bounds.height / 4.0 // A bottom inset from the safe area
             default: return nil // Or `case .hidden: return nil`
             }
         }
