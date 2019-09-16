@@ -13,6 +13,7 @@ import SnapKit
 class MainMapViewController: UIViewController {
     var fpc: FloatingPanelController!
     @IBOutlet weak var mainMapImageView: UIImageView!
+    var previousFpcPosition: FloatingPanelPosition?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,20 @@ class MainMapViewController: UIViewController {
         
         let contentView = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController") as! FloatingPanelContentViewController
         contentView.parentVC = self
+        contentView.searchBeginBlock = { [weak self] in
+            self?.previousFpcPosition = self?.fpc.position
+            self?.fpc.move(to: .full, animated: true)
+        }
+        
+        contentView.searchCancelledBlock = { [weak self] in
+            if let previousPosition = self?.previousFpcPosition {
+                self?.fpc.move(to: previousPosition, animated: true)
+                self?.previousFpcPosition = .none
+            } else {
+                self?.fpc.move(to: .tip, animated: true)
+            }
+        }
+        
         fpc.set(contentViewController: contentView)
         
         fpc.addPanel(toParent: self)
