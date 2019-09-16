@@ -337,21 +337,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MainMap" translatesAutoresizingMaskIntoConstraints="NO" id="AEq-jz-hhz" customClass="MainMap">
-                                <rect key="frame" x="16" y="20" width="382" height="556"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="250" image="MainMap" translatesAutoresizingMaskIntoConstraints="NO" id="AEq-jz-hhz">
+                                <rect key="frame" x="16" y="20" width="382" height="716"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="AEq-jz-hhz" firstAttribute="height" secondItem="RK2-o2-4TF" secondAttribute="height" priority="500" id="1gf-4U-Uz0"/>
                             <constraint firstItem="AEq-jz-hhz" firstAttribute="leading" secondItem="RK2-o2-4TF" secondAttribute="leading" constant="16" id="M01-AG-Dc3"/>
                             <constraint firstItem="AEq-jz-hhz" firstAttribute="trailing" secondItem="RK2-o2-4TF" secondAttribute="trailing" constant="-16" id="SZB-FL-JH0"/>
                             <constraint firstItem="AEq-jz-hhz" firstAttribute="top" secondItem="RK2-o2-4TF" secondAttribute="top" id="uXu-Bj-a94"/>
-                            <constraint firstItem="RK2-o2-4TF" firstAttribute="bottom" secondItem="AEq-jz-hhz" secondAttribute="bottom" constant="160" id="wtm-bN-JRi"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RK2-o2-4TF"/>
                     </view>
                     <navigationItem key="navigationItem" id="My2-6j-iD9"/>
                     <connections>
+                        <outlet property="mainMapImageView" destination="AEq-jz-hhz" id="ntt-6Q-wNk"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="showSplayDemo" id="ZKV-GX-sWL"/>
                     </connections>
                 </viewController>
@@ -361,7 +362,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="MainMap" width="720" height="1045"/>
+        <image name="MainMap" width="1000" height="1451"/>
         <image name="food" width="60" height="60"/>
         <image name="fun" width="120" height="120"/>
         <image name="like" width="88" height="88"/>

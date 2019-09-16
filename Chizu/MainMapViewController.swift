@@ -8,9 +8,11 @@
 
 import UIKit
 import FloatingPanel
+import SnapKit
 
 class MainMapViewController: UIViewController {
     var fpc: FloatingPanelController!
+    @IBOutlet weak var mainMapImageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +25,10 @@ class MainMapViewController: UIViewController {
         fpc.set(contentViewController: contentView)
         
         fpc.addPanel(toParent: self)
+        
+        mainMapImageView.snp.makeConstraints { (make) in
+        make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,7 +58,7 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
             switch position {
             case .full: return 18.0
             case .half: return UIScreen.main.bounds.height / 2.0 // A bottom inset from the safe area
-            case .tip: return UIScreen.main.bounds.height / 4.0 // A bottom inset from the safe area
+            case .tip: return UIScreen.main.bounds.height / 4 // A bottom inset from the safe area
             default: return nil // Or `case .hidden: return nil`
             }
         }
