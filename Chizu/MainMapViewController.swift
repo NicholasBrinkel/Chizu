@@ -54,11 +54,14 @@ class MainMapViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        DispatchQueue.main.async { //This takes a long time, so it's done in the background. Will animate the pins in once done processing pixel markers
-            guard let image = self.mainMapImageView.image else {return}
+        guard let image = self.mainMapImageView.image else {return}
+        DispatchQueue.global(qos: .background).async { //This takes a long time, so it's done in the background. Will animate the pins in once done processing pixel markers
             self.pixels = self.findColors(image)
-            print()
+            for secretPixel in self.pixels {
+                DispatchQueue.main.async {
+                    self.drawPOI(pixel: secretPixel)
+                }
+            }
         }
         fpc.addPanel(toParent: self)
     }
@@ -67,6 +70,21 @@ class MainMapViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         fpc.removePanelFromParent(animated: animated)
+    }
+    
+    private func drawPOI(pixel: Pixel) {
+        let testView = UIView()
+        testView.backgroundColor = UIColor.blue
+        mainMapImageView.addSubview(testView)
+        
+        let widthScale =  mainMapImageView.frame.width / 1000.0
+        let heightScale = mainMapImageView.frame.height / 1451.0
+        
+        testView.snp.makeConstraints { (make) in
+            make.width.height.equalTo(5)
+            make.centerX.equalTo(pixel.position.x * widthScale)
+            make.centerY.equalTo(pixel.position.y * heightScale)
+        }
     }
     
     private func findColors(_ image: UIImage) -> [Pixel] {
@@ -92,7 +110,7 @@ class MainMapViewController: UIViewController {
                     print("Debug Color green = \(CGFloat(data[pixelInfo + 1]))")
                     print("Debug Color blue = \(CGFloat(data[pixelInfo + 2]))")
                 }
-                if data[pixelInfo + 3] == 66 {
+                if data[pixelInfo + 3] != 255 {
                     let pixel = Pixel(color: color, position: point)
                     imageColors.append(pixel)
                 }
