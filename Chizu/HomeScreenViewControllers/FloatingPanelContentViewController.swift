@@ -30,7 +30,7 @@ class FloatingPanelContentViewController: UIViewController {
 extension FloatingPanelContentViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
        // if indexPath.row == 1 {
-            self.performSegue(withIdentifier: "showSplayDemo", sender: self)
+            self.performSegue(withIdentifier: "showNavDemo", sender: self)
        // }
     }
 }

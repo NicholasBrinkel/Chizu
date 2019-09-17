@@ -16,10 +16,24 @@ enum SupportedDevice: String {
     case iPad_6Sim = "Simulator iPad 6"
     case XR = "iPhone XR"
     case XRSim = "Simulator iPhone XR"
-}
-
-protocol Route {
-    func getRoute() -> [Cell]
+    case XS = "iPhone XS"
+    case XSSim = "Simulator iPhone XS"
+    case iPhone8 = "iPhone 8"
+    case iPhone8Plus = "iPhone 8 Plus"
+    case iPhone8Sim = "Simulator iPhone 8"
+    case iPhone8PlusSim = "Simulator iPhone 8 Plus"
+    case iPhone7 = "iPhone 7"
+    case iPhone7Plus = "iPhone 7 Plus"
+    case iPhone7Sim = "Simulator iPhone 7"
+    case iPhone7PlusSim = "Simulator iPhone 7 Plus"
+    case iPhone6s = "iPhone 6s"
+    case iPhone6sPlus = "iPhone 6s Plus"
+    case iPhone6sSim = "Simulator iPhone 6s"
+    case iPhone6sPlusSim = "Simulator iPhone 6s Plus"
+    case iPhone6 = "iPhone 6"
+    case iPhone6Plus = "iPhone 6 Plus"
+    case iPhone6Sim = "Simulator iPhone 6"
+    case iPhone6PlusSim = "Simulator iPhone 6 Plus"
 }
 
 class Grid {
@@ -36,23 +50,6 @@ class Grid {
     var xDistanceFromLeftEdgeToContent: CGFloat = 40.5
     var yDistanceFromTopEdgeToContent: CGFloat = 34
     var grid: [[Cell]] = [[]]
-    
-    // Custom routes.
-    /// (0, 0) IS THE UPPER LEFT CORNER OF THE CONTENT. NOT the Picture. if the picture is in the shape of a reversed L, extend the highest point
-    /// and furthest left point and let those values combined be (0, 0).
-    enum Example1: Route {
-        case fifthFlor
-        case secondFloor
-        
-        func getRoute() -> [Cell] {
-            switch self {
-            case .fifthFlor:
-                return [Cell(x: 0, y: 0), Cell(x: Grid.shared.xMax, y: Grid.shared.yMax), Cell(x: 40.5, y: 40.5), Cell(x: 40.5, y: 37), Cell(x: 33, y: 37), Cell(x: 33, y: 84), Cell(x: 23, y: 84), Cell(x: 23, y: 90)]
-            case .secondFloor:
-                return [Cell(x: 23.4, y: 90), Cell(x: 23.4, y: 84), Cell(x: 14.5, y: 84), Cell(x: 14.5, y: 131), Cell(x: 2, y: 131)/*, Cell(x: 5.5, y: 26)*/]
-            }
-        }
-    }
     
     static let shared: Grid = {
         return Grid()
@@ -73,30 +70,44 @@ class Grid {
         return Cell(x: (cell.x + xDistanceFromLeftEdgeToContent), y: (cell.y + yDistanceFromTopEdgeToContent))
     }
     
-    func getPointsForRoute(_ route: Route) -> [CGPoint] {
+    func getPointsForSegment(_ segment: Segment) -> [CGPoint] {
         if let device = device {
             switch device {
-            case .XSMax, .XSMaxSim:
-                xDistanceFromLeftEdgeToContent = 40.5
-                yDistanceFromTopEdgeToContent = 34
+            case .XSMax, .XSMaxSim, .XR, .XRSim:
+                xDistanceFromLeftEdgeToContent = 39.75
+                yDistanceFromTopEdgeToContent = 29.25
                 
-                let xScaleFactor: CGFloat = 3.1
-                let yScaleFactor: CGFloat = 3.03
-                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+                let xScaleFactor: CGFloat = 3.23
+                let yScaleFactor: CGFloat = 3.17
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            case .XS, .XSSim:
+                xDistanceFromLeftEdgeToContent = 39
+                yDistanceFromTopEdgeToContent = 25.4
+                
+                let xScaleFactor: CGFloat = 2.93
+                let yScaleFactor: CGFloat = 2.85743034
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .iPad_6, .iPad_6Sim:
-                xDistanceFromLeftEdgeToContent = 41.5
-                yDistanceFromTopEdgeToContent = 4.75
+                xDistanceFromLeftEdgeToContent = 49
+                yDistanceFromTopEdgeToContent = 4.7
                 
-                let xScaleFactor: CGFloat = 5.8
-                let yScaleFactor: CGFloat = 5.75
-                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
-            case .XR, .XRSim:
-                xDistanceFromLeftEdgeToContent = 41.5
-                yDistanceFromTopEdgeToContent = 41
+                let xScaleFactor: CGFloat = 5.25
+                let yScaleFactor: CGFloat = 5.1
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            case .iPhone8, .iPhone8Sim, .iPhone7, .iPhone7Sim, .iPhone6s, .iPhone6sSim, .iPhone6, .iPhone6Sim:
+                xDistanceFromLeftEdgeToContent = 40
+                yDistanceFromTopEdgeToContent = 10.25
                 
-                let xScaleFactor: CGFloat = 3.1
-                let yScaleFactor: CGFloat = 3.03
-                return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+                let xScaleFactor: CGFloat = 2.9
+                let yScaleFactor: CGFloat = 2.87
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            case .iPhone8Plus, .iPhone8PlusSim, .iPhone7Plus, .iPhone7PlusSim, .iPhone6sPlus, .iPhone6sPlusSim, .iPhone6Plus, .iPhone6PlusSim:
+                xDistanceFromLeftEdgeToContent = 40.3
+                yDistanceFromTopEdgeToContent = 13
+                
+                let xScaleFactor: CGFloat = 3.19
+                let yScaleFactor: CGFloat = 3.17
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             }
         } else {
             xDistanceFromLeftEdgeToContent = 43
@@ -104,7 +115,7 @@ class Grid {
             
             let xScaleFactor: CGFloat = 3.1
             let yScaleFactor: CGFloat = 3.03
-            return route.getRoute().map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
         }
     }
 }

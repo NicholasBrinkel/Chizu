@@ -32,6 +32,29 @@ enum AnimationDirection {
     }
 }
 
+enum AnimationType {
+    
+    case perspectiveShift(UIView)
+    case undoPerspectiveShift(UIView)
+    case perspectiveShiftAllViews
+    case undoAllPerspectiveShifts
+    
+    case splayAllViews
+    case moveToSplayedPosition(UIView)
+    case moveToUnsplayedPosition(UIView)
+    case unsplayAllViews
+    
+    case perspectiveSplayAllViews
+    case moveToSplayedPositionWithPerspective(UIView)
+    case moveToUnsplayedPositionWithPerspective(UIView)
+    case undoPerspectiveSplays
+    
+    case spotlight(UIView)
+    case undoSpotlight
+    case drawSegment(Segment)
+    case drawAllSegments(RoutePath)
+}
+
 class PerspectiveStackView: UIView {
     private var stackedViews = [UIView]()
     private var stackedPerspectiveViews = [PerspectiveView]()
@@ -297,19 +320,25 @@ class PerspectiveStackView: UIView {
     }
     
     
-    func addPath(forRoute route: Route, toIndex i: Int) {
+    func drawAllRouteSegments(forRoutePath routePath: RoutePath) {
+        for segment in routePath.segments {
+            drawRoute(forSegment: segment)
+        }
+    }
+    
+    func drawRoute(forSegment segment: Segment) {
         let pathCreator = PathCreator()
-        let path = pathCreator.createPath(fromPoints: Grid.shared.getPointsForRoute(route))
+        let path = pathCreator.createPath(fromPoints: Grid.shared.getPointsForSegment(segment))
         let pathLayer = pathCreator.makePathLayer(withPath: path, withAnimationTimingFunctionName: .easeIn, styleProvider: .none)
         pathLayer.fillColor = nil
         
-        stackedPerspectiveViews[i].layer.addSublayer(pathLayer)
+        perspectiveViewForView(view: segment.view).layer.addSublayer(pathLayer)
         
                 let animation =  CABasicAnimation(keyPath: "strokeEnd")
         animation.fromValue = 0
                 animation.toValue = 1
                 animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
-                animation.duration = 2
+                animation.duration = 1
         
                 CATransaction.begin()
                 pathLayer.add(animation, forKey: "line")
@@ -507,6 +536,16 @@ class PerspectiveStackView: UIView {
     
     
     func add(view: UIView, at i: Int) {
+        self.addView(view: view, at: i)
+        
+        self.originalPositionValues.append(view.layer.position)
+        self.originalPerspectiveValues.append(view.layer.transform)
+        
+        updateToFromPositions()
+        updateToFromTransforms()
+    }
+    
+    private func addView(view: UIView, at i: Int) {
         guard i <= self.stackedViews.count else { return }
         // If the view isn't alredy in the stack, add it.
         guard (!self.stackedViews.contains(view)) else { return }
@@ -530,15 +569,16 @@ class PerspectiveStackView: UIView {
         }
         
         self.originalPerspectiveValues.append(view.layer.transform)
-        
-        //centerStartingPositions()
-        //updateToFromPositions()
     }
     
     func add(view: UIView) {
         addView(view: view)
         
+        originalPositionValues.append(view.layer.position)
+        originalPerspectiveValues.append(view.layer.transform)
+        
         updateToFromPositions()
+        updateToFromTransforms()
     }
     
     private func addView(view: UIView) {
@@ -549,8 +589,6 @@ class PerspectiveStackView: UIView {
         self.stackedPerspectiveViews.append(perspectiveView)
         self.stackedViews.append(view)
         
-        self.originalPerspectiveValues.append(view.layer.transform)
-        
         addSubview(perspectiveView)
         perspectiveView.snp.makeConstraints { (make) in
             make.top.bottom.leading.trailing.equalToSuperview()
@@ -558,9 +596,6 @@ class PerspectiveStackView: UIView {
         }
         
         view.layoutIfNeeded()
-        
-        //centerStartingPositions()
-        //updateToFromPositions()
     }
     
     private func makePerspectiveViewWith(_ view: UIView) -> PerspectiveView {

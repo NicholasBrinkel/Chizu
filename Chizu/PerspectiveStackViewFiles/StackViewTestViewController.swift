@@ -66,8 +66,8 @@ class StackViewTestViewController: UIViewController {
             self.present(alert, animated: true)
         }
         
-        stackView.addPath(forRoute: Grid.Example1.fifthFlor, toIndex: 4)
-        stackView.addPath(forRoute: Grid.Example1.secondFloor, toIndex: 1)
+//        stackView.drawRoute(forPath: Routes)
+//        stackView.drawRoute(forPath: Routes.Example1.allCases[1])
     }
     
     @IBAction func splayAll(_ sender: Any) {
