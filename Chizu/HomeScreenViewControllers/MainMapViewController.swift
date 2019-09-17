@@ -8,9 +8,12 @@
 
 import UIKit
 import FloatingPanel
+import SnapKit
 
 class MainMapViewController: UIViewController {
     var fpc: FloatingPanelController!
+    @IBOutlet weak var mainMapImageView: UIImageView!
+    var previousFpcPosition: FloatingPanelPosition?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,9 +23,27 @@ class MainMapViewController: UIViewController {
         
         let contentView = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController") as! FloatingPanelContentViewController
         contentView.parentVC = self
+        contentView.searchBeginBlock = { [weak self] in
+            self?.previousFpcPosition = self?.fpc.position
+            self?.fpc.move(to: .full, animated: true)
+        }
+        
+        contentView.searchCancelledBlock = { [weak self] in
+            if let previousPosition = self?.previousFpcPosition {
+                self?.fpc.move(to: previousPosition, animated: true)
+                self?.previousFpcPosition = .none
+            } else {
+                self?.fpc.move(to: .tip, animated: true)
+            }
+        }
+        
         fpc.set(contentViewController: contentView)
         
         fpc.addPanel(toParent: self)
+        
+        mainMapImageView.snp.makeConstraints { (make) in
+        make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,8 +78,8 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
         public func insetFor(position: FloatingPanelPosition) -> CGFloat? {
             switch position {
             case .full: return 18.0
-            case .half: return 255.0 // A bottom inset from the safe area
-            case .tip: return 140 // A bottom inset from the safe area
+            case .half: return UIScreen.main.bounds.height / 2.0 // A bottom inset from the safe area
+            case .tip: return UIScreen.main.bounds.height / 4 // A bottom inset from the safe area
             default: return nil // Or `case .hidden: return nil`
             }
         }

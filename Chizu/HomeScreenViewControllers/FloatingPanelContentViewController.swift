@@ -11,14 +11,19 @@ import UIKit
 
 class FloatingPanelContentViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var parentVC: UITableViewDelegate?
+    var searchBeginBlock: (() -> ())?
+    var searchCancelledBlock: (() -> ())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = self
         tableView.delegate = parentVC
+        searchBar.delegate = self
+        searchBar.showsCancelButton = true
     }
 }
 
@@ -57,6 +62,22 @@ extension FloatingPanelContentViewController: UITableViewDataSource {
         default:
             return UITableViewCell()
         }
+    }
+}
+
+extension FloatingPanelContentViewController: UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBeginBlock?()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchCancelledBlock?()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        searchCancelledBlock?()
     }
 }
 

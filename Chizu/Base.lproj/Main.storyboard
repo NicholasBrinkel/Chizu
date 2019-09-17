@@ -196,6 +196,7 @@
                         <viewLayoutGuide key="safeArea" id="Xkf-DQ-9oI"/>
                     </view>
                     <connections>
+                        <outlet property="searchBar" destination="Xgy-mt-KBz" id="qJ8-7w-Ofv"/>
                         <outlet property="tableView" destination="mdy-oh-2rO" id="bi3-Wx-btQ"/>
                     </connections>
                 </viewController>
@@ -343,15 +344,16 @@
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="AEq-jz-hhz" firstAttribute="height" secondItem="RK2-o2-4TF" secondAttribute="height" priority="500" id="1gf-4U-Uz0"/>
                             <constraint firstItem="AEq-jz-hhz" firstAttribute="leading" secondItem="RK2-o2-4TF" secondAttribute="leading" constant="16" id="M01-AG-Dc3"/>
                             <constraint firstItem="AEq-jz-hhz" firstAttribute="trailing" secondItem="RK2-o2-4TF" secondAttribute="trailing" constant="-16" id="SZB-FL-JH0"/>
                             <constraint firstItem="AEq-jz-hhz" firstAttribute="top" secondItem="RK2-o2-4TF" secondAttribute="top" id="uXu-Bj-a94"/>
-                            <constraint firstItem="RK2-o2-4TF" firstAttribute="bottom" secondItem="AEq-jz-hhz" secondAttribute="bottom" constant="160" id="wtm-bN-JRi"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RK2-o2-4TF"/>
                     </view>
                     <navigationItem key="navigationItem" id="My2-6j-iD9"/>
                     <connections>
+                        <outlet property="mainMapImageView" destination="AEq-jz-hhz" id="ntt-6Q-wNk"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="showSplayDemo" id="ZKV-GX-sWL"/>
                         <segue destination="wxu-pZ-un4" kind="show" identifier="showNavDemo" id="Qaw-Xi-X1g"/>
                     </connections>
@@ -438,7 +440,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="MainMap" width="720" height="1045"/>
+        <image name="MainMap" width="1000" height="1451"/>
         <image name="food" width="60" height="60"/>
         <image name="fun" width="120" height="120"/>
         <image name="like" width="88" height="88"/>
