@@ -40,9 +40,9 @@ class Routes {
     )
     
     static let CalibrateRoute = Route(floors: Routes.E2Floors,
-                                      routePath: Example1(),
+                                      routePath: CalibrateRoutePath(),
                                       steps: [
-                                        Step(isDirectionLabelVisible: false, directionInstruction: " ", animation: .drawAllSegments(Example1()))
+                                        Step(isDirectionLabelVisible: false, directionInstruction: " ", animation: .drawAllSegments(CalibrateRoutePath()))
         ]
     )
     
@@ -68,7 +68,7 @@ class Routes {
                 case .fifthFloor:
                     return [Cell(x: 40.5, y: 38.5), Cell(x: 40.5, y: 36), Cell(x: 33, y: 36), Cell(x: 33, y: 81.5), Cell(x: 23, y: 81.5), Cell(x: 23, y: 88)].reversed()
                 case .secondFloor:
-                    return [Cell(x: 23.4, y: 88), Cell(x: 23.4, y: 82), Cell(x: 14.5, y: 82), Cell(x: 14.5, y: 127), Cell(x: 2, y: 127)].reversed()
+                    return [Cell(x: 23.4, y: 88), Cell(x: 23.4, y: 82), Cell(x: 14.5, y: 82), Cell(x: 14.5, y: 127.5), Cell(x: 2, y: 127.5)].reversed()
                 }
             }
             
@@ -94,7 +94,7 @@ class Routes {
             case floor
             
             func getRoutePathPoints() -> [Cell] {
-                return [Cell(x: 0, y: 0), Cell(x: Grid.shared.xMax, y: 0), Cell(x: 0, y: Grid.shared.yMax), Cell(x: Grid.shared.xMax, y: Grid.shared.yMax), Cell(x: Grid.shared.xMax, y: 0)]
+                return [Cell(x: 0, y: 0), Cell(x: Grid.shared.xMax, y: 0), Cell(x: Grid.shared.xMax, y: Grid.shared.yMax), Cell(x: 0, y: Grid.shared.yMax), Cell(x: 0, y: 0)]
             }
             
             func view() -> UIImageView {

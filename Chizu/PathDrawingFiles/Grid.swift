@@ -16,6 +16,24 @@ enum SupportedDevice: String {
     case iPad_6Sim = "Simulator iPad 6"
     case XR = "iPhone XR"
     case XRSim = "Simulator iPhone XR"
+    case XS = "iPhone XS"
+    case XSSim = "Simulator iPhone XS"
+    case iPhone8 = "iPhone 8"
+    case iPhone8Plus = "iPhone 8 Plus"
+    case iPhone8Sim = "Simulator iPhone 8"
+    case iPhone8PlusSim = "Simulator iPhone 8 Plus"
+    case iPhone7 = "iPhone 7"
+    case iPhone7Plus = "iPhone 7 Plus"
+    case iPhone7Sim = "Simulator iPhone 7"
+    case iPhone7PlusSim = "Simulator iPhone 7 Plus"
+    case iPhone6s = "iPhone 6s"
+    case iPhone6sPlus = "iPhone 6s Plus"
+    case iPhone6sSim = "Simulator iPhone 6s"
+    case iPhone6sPlusSim = "Simulator iPhone 6s Plus"
+    case iPhone6 = "iPhone 6"
+    case iPhone6Plus = "iPhone 6 Plus"
+    case iPhone6Sim = "Simulator iPhone 6"
+    case iPhone6PlusSim = "Simulator iPhone 6 Plus"
 }
 
 class Grid {
@@ -55,12 +73,19 @@ class Grid {
     func getPointsForSegment(_ segment: Segment) -> [CGPoint] {
         if let device = device {
             switch device {
-            case .XSMax, .XSMaxSim:
-                xDistanceFromLeftEdgeToContent = 40.5
-                yDistanceFromTopEdgeToContent = 34
+            case .XSMax, .XSMaxSim, .XR, .XRSim:
+                xDistanceFromLeftEdgeToContent = 39.75
+                yDistanceFromTopEdgeToContent = 29.25
                 
-                let xScaleFactor: CGFloat = 3.1
-                let yScaleFactor: CGFloat = 3.03
+                let xScaleFactor: CGFloat = 3.23
+                let yScaleFactor: CGFloat = 3.17
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            case .XS, .XSSim:
+                xDistanceFromLeftEdgeToContent = 39
+                yDistanceFromTopEdgeToContent = 25.4
+                
+                let xScaleFactor: CGFloat = 2.93
+                let yScaleFactor: CGFloat = 2.85743034
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .iPad_6, .iPad_6Sim:
                 xDistanceFromLeftEdgeToContent = 49
@@ -69,12 +94,19 @@ class Grid {
                 let xScaleFactor: CGFloat = 5.25
                 let yScaleFactor: CGFloat = 5.1
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
-            case .XR, .XRSim:
-                xDistanceFromLeftEdgeToContent = 41.5
-                yDistanceFromTopEdgeToContent = 41
+            case .iPhone8, .iPhone8Sim, .iPhone7, .iPhone7Sim, .iPhone6s, .iPhone6sSim, .iPhone6, .iPhone6Sim:
+                xDistanceFromLeftEdgeToContent = 40
+                yDistanceFromTopEdgeToContent = 10.25
                 
-                let xScaleFactor: CGFloat = 3.1
-                let yScaleFactor: CGFloat = 3.03
+                let xScaleFactor: CGFloat = 2.9
+                let yScaleFactor: CGFloat = 2.87
+                return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
+            case .iPhone8Plus, .iPhone8PlusSim, .iPhone7Plus, .iPhone7PlusSim, .iPhone6sPlus, .iPhone6sPlusSim, .iPhone6Plus, .iPhone6PlusSim:
+                xDistanceFromLeftEdgeToContent = 40.3
+                yDistanceFromTopEdgeToContent = 13
+                
+                let xScaleFactor: CGFloat = 3.19
+                let yScaleFactor: CGFloat = 3.17
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             }
         } else {
