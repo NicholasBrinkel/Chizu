@@ -104,12 +104,13 @@ fileprivate class POIPin: UIView {
     }
 }
 
-class MainMapViewController: UIViewController {
+class MainMapViewController: UIViewController, UIScrollViewDelegate {
     var fpc: FloatingPanelController!
     @IBOutlet weak var mainMapImageView: UIImageView!
     var previousFpcPosition: FloatingPanelPosition?
     var pixels: [Pixel] = []
     fileprivate var poiPins: [POIPin] = []
+    @IBOutlet weak var scrollView: UIScrollView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,9 +138,27 @@ class MainMapViewController: UIViewController {
         
         fpc.addPanel(toParent: self)
         
-        mainMapImageView.snp.makeConstraints { (make) in
+        scrollView.delegate = self
+        scrollView.snp.makeConstraints { (make) in
         make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
         }
+    }
+    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return mainMapImageView
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        let offsetX = max((scrollView.bounds.width - scrollView.contentSize.width) * 0.5, 0)
+        let offsetY = max((scrollView.bounds.height - scrollView.contentSize.height) * 0.5, 0)
+        scrollView.contentInset = UIEdgeInsets(top: offsetY, left: offsetX, bottom: 0, right: 0)
+        
+        for poiView in self.poiPins {
+            poiView.snp.updateConstraints { (make) in
+                make.width.height.equalTo(18 / self.scrollView.zoomScale)
+            }
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -158,6 +177,21 @@ class MainMapViewController: UIViewController {
             }
         }
         fpc.addPanel(toParent: self)
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        scrollView.contentSize = mainMapImageView.frame.size
+        let scaleWidth = scrollView.frame.size.width / scrollView.contentSize.width
+        let scaleHeight = scrollView.frame.size.height / scrollView.contentSize.height
+        let minScale = min(scaleWidth, scaleHeight)
+        
+        scrollView.minimumZoomScale = minScale * 0.99
+        scrollView.maximumZoomScale = 50.0
+        
+        scrollView.setZoomScale(minScale * 0.9, animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -173,12 +207,12 @@ class MainMapViewController: UIViewController {
         mainMapImageView.addSubview(poiView)
         poiView.pixelInfo = pixel
         
-        let widthScale =  mainMapImageView.frame.width / 1000.0
-        let heightScale = mainMapImageView.frame.height / 1451.0
+        let widthScale =  mainMapImageView.bounds.width / 1000.0
+        let heightScale = mainMapImageView.bounds.height / 1451.0
         
         UIView.animate(withDuration: 0.3) {
             poiView.snp.makeConstraints { (make) in
-                make.width.height.equalTo(18)
+                make.width.height.equalTo(18 / self.scrollView.zoomScale)
                 make.centerX.equalTo(pixel.position.x * widthScale)
                 make.centerY.equalTo(pixel.position.y * heightScale)
             }
