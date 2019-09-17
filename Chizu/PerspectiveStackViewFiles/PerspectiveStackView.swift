@@ -338,7 +338,7 @@ class PerspectiveStackView: UIView {
         animation.fromValue = 0
                 animation.toValue = 1
                 animation.timingFunction = CAMediaTimingFunction(name: .easeIn)
-                animation.duration = 2
+                animation.duration = 1
         
                 CATransaction.begin()
                 pathLayer.add(animation, forKey: "line")
@@ -536,6 +536,16 @@ class PerspectiveStackView: UIView {
     
     
     func add(view: UIView, at i: Int) {
+        self.addView(view: view, at: i)
+        
+        self.originalPositionValues.append(view.layer.position)
+        self.originalPerspectiveValues.append(view.layer.transform)
+        
+        updateToFromPositions()
+        updateToFromTransforms()
+    }
+    
+    private func addView(view: UIView, at i: Int) {
         guard i <= self.stackedViews.count else { return }
         // If the view isn't alredy in the stack, add it.
         guard (!self.stackedViews.contains(view)) else { return }
@@ -559,15 +569,13 @@ class PerspectiveStackView: UIView {
         }
         
         self.originalPerspectiveValues.append(view.layer.transform)
-        
-        //centerStartingPositions()
-        //updateToFromPositions()
     }
     
     func add(view: UIView) {
         addView(view: view)
         
         originalPositionValues.append(view.layer.position)
+        originalPerspectiveValues.append(view.layer.transform)
         
         updateToFromPositions()
         updateToFromTransforms()
@@ -581,8 +589,6 @@ class PerspectiveStackView: UIView {
         self.stackedPerspectiveViews.append(perspectiveView)
         self.stackedViews.append(view)
         
-        self.originalPerspectiveValues.append(view.layer.transform)
-        
         addSubview(perspectiveView)
         perspectiveView.snp.makeConstraints { (make) in
             make.top.bottom.leading.trailing.equalToSuperview()
@@ -590,9 +596,6 @@ class PerspectiveStackView: UIView {
         }
         
         view.layoutIfNeeded()
-        
-        //centerStartingPositions()
-        //updateToFromPositions()
     }
     
     private func makePerspectiveViewWith(_ view: UIView) -> PerspectiveView {

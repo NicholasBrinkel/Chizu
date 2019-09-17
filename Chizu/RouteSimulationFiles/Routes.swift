@@ -21,13 +21,28 @@ class Routes {
         floors: Routes.E2Floors,
         routePath: Example1(),
         steps: [
-            Step(isButtonVisible: false, isDirectionLabelVisible: false, directionInstruction: "", animation: .none, duration: 0.5),
-            Step(isButtonVisible: false, isDirectionLabelVisible: false, directionInstruction: "", animation: .drawAllSegments(Example1()), duration: 2),
-            Step(isButtonVisible: false, isDirectionLabelVisible: false, directionInstruction: "", animation: .perspectiveSplayAllViews, duration: 3),
-            Step(isButtonVisible: true, isDirectionLabelVisible: true, directionInstruction: "Walk from desk to Elevator", animation: .spotlight(Example1.secondFloor.view)),
-            Step(isButtonVisible: true, isDirectionLabelVisible: true, directionInstruction: "Take Elevator", animation: .undoSpotlight),
-            Step(isButtonVisible: true, isDirectionLabelVisible: true, directionInstruction: "Walk to Conference Room", animation: .spotlight(Example1.fifthFloor.view)),
-            Step(isButtonVisible: true, isDirectionLabelVisible: true, directionInstruction: "Done!", animation: .undoSpotlight)
+            Step(isDirectionLabelVisible: true, directionInstruction: " ", animation: .none, duration: 0.5),
+            Step(isDirectionLabelVisible: true, directionInstruction: " ", animation: .drawAllSegments(Example1()), duration: 2),
+            Step(isDirectionLabelVisible: true, directionInstruction: " ", animation: .perspectiveSplayAllViews, duration: 2),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Walk to Elevator", animation: .spotlight(Example1.secondFloor.view)),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Take Elevator", animation: .undoSpotlight),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Walk to Conference Room", animation: .spotlight(Example1.fifthFloor.view)),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Done!", animation: .undoSpotlight)
+        ]
+    )
+    
+    static let Calibrate = Route(
+        floors: Routes.E2Floors.dropLast().dropLast().dropLast().dropLast(),
+        routePath: CalibrateRoutePath(),
+        steps: [
+            Step(isDirectionLabelVisible: false, directionInstruction: " ", animation: .drawAllSegments(CalibrateRoutePath()))
+        ]
+    )
+    
+    static let CalibrateRoute = Route(floors: Routes.E2Floors,
+                                      routePath: Example1(),
+                                      steps: [
+                                        Step(isDirectionLabelVisible: false, directionInstruction: " ", animation: .drawAllSegments(Example1()))
         ]
     )
     
@@ -51,9 +66,9 @@ class Routes {
             func getRoutePathPoints() -> [Cell] {
                 switch self {
                 case .fifthFloor:
-                    return [Cell(x: 40.5, y: 40.5), Cell(x: 40.5, y: 37), Cell(x: 33, y: 37), Cell(x: 33, y: 84), Cell(x: 23, y: 84), Cell(x: 23, y: 90)]
+                    return [Cell(x: 40.5, y: 38.5), Cell(x: 40.5, y: 36), Cell(x: 33, y: 36), Cell(x: 33, y: 81.5), Cell(x: 23, y: 81.5), Cell(x: 23, y: 88)].reversed()
                 case .secondFloor:
-                    return [Cell(x: 23.4, y: 90), Cell(x: 23.4, y: 84), Cell(x: 14.5, y: 84), Cell(x: 14.5, y: 131), Cell(x: 2, y: 131)/*, Cell(x: 5.5, y: 26)*/]
+                    return [Cell(x: 23.4, y: 88), Cell(x: 23.4, y: 82), Cell(x: 14.5, y: 82), Cell(x: 14.5, y: 127), Cell(x: 2, y: 127)].reversed()
                 }
             }
             
@@ -64,6 +79,26 @@ class Routes {
                 case .fifthFloor:
                     return Routes.E2Floors[4]
                 }
+            }
+        }
+    }
+    
+    class CalibrateRoutePath: RoutePath {
+        static let floor: Segment = {
+           return Segment(pathPoints: Segments.floor.getRoutePathPoints(), view: Segments.floor.view())
+        }()
+        
+        lazy var segments: [Segment] = [CalibrateRoutePath.floor]
+        
+        private enum Segments: CaseIterable {
+            case floor
+            
+            func getRoutePathPoints() -> [Cell] {
+                return [Cell(x: 0, y: 0), Cell(x: Grid.shared.xMax, y: 0), Cell(x: 0, y: Grid.shared.yMax), Cell(x: Grid.shared.xMax, y: Grid.shared.yMax), Cell(x: Grid.shared.xMax, y: 0)]
+            }
+            
+            func view() -> UIImageView {
+                return Routes.E2Floors.first!
             }
         }
     }

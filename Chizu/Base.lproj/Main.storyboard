@@ -410,7 +410,7 @@
                     </view>
                     <connections>
                         <outlet property="currentInst" destination="o3U-Il-LOe" id="GrY-M6-o9g"/>
-                        <outlet property="floors" destination="tSl-EU-31c" id="rxV-KL-otD"/>
+                        <outlet property="floors" destination="tSl-EU-31c" id="zZ2-t3-Fxi"/>
                         <outlet property="nextButton" destination="tDp-JG-zwP" id="K7W-dc-xBV"/>
                     </connections>
                 </viewController>

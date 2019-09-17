@@ -67,10 +67,14 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
 
 extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // if indexPath.row == 1 {
-        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.row == 0 {
+            tableView.deselectRow(at: indexPath, animated: true)
         
-        self.performSegue(withIdentifier: "showNavDemo", sender: self)
-        // }
+            self.performSegue(withIdentifier: "showSplayDemo", sender: self)
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
+            
+            self.performSegue(withIdentifier: "showNavDemo", sender: self)
+        }
     }
 }

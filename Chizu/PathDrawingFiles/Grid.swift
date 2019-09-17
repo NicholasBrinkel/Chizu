@@ -63,11 +63,11 @@ class Grid {
                 let yScaleFactor: CGFloat = 3.03
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .iPad_6, .iPad_6Sim:
-                xDistanceFromLeftEdgeToContent = 41.5
-                yDistanceFromTopEdgeToContent = 4.75
+                xDistanceFromLeftEdgeToContent = 49
+                yDistanceFromTopEdgeToContent = 4.7
                 
-                let xScaleFactor: CGFloat = 5.8
-                let yScaleFactor: CGFloat = 5.75
+                let xScaleFactor: CGFloat = 5.25
+                let yScaleFactor: CGFloat = 5.1
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .XR, .XRSim:
                 xDistanceFromLeftEdgeToContent = 41.5

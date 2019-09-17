@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class RouteSimulationViewController: UIViewController {
     @IBOutlet weak var currentInst: UILabel!
@@ -26,15 +27,14 @@ class RouteSimulationViewController: UIViewController {
     var timeUntilNextStep: Float = 2
     
     
-    
-    
-    
     func configureWithRoute(_ route: Route) {
         self.route = route
     }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.addSubview(floors)
         
         view.bringSubviewToFront(nextButton)
         view.bringSubviewToFront(currentInst)
@@ -44,7 +44,7 @@ class RouteSimulationViewController: UIViewController {
             floors.add(view: floor)
         }
         
-        floors.spacing = 80
+        floors.spacing = 140
         
         nextButton.layer.cornerRadius = 8
     }
@@ -94,8 +94,8 @@ class RouteSimulationViewController: UIViewController {
         
         UIView.animate(withDuration: 0.5) {
             self.currentInst.alpha = step.isDirectionLabelVisible ? 1 : 0
-            self.nextButton.alpha = step.isButtonVisible ? 1 : 0
-            self.nextButton.isEnabled = step.isButtonVisible
+            self.nextButton.alpha = step.duration == nil ? 1 : 0
+            self.nextButton.isEnabled = (step.duration == nil)
         }
         
         self.currentInst.text = step.directionInstruction
