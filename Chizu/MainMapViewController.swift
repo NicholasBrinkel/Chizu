@@ -12,7 +12,96 @@ import SnapKit
 
 struct Pixel {
     let color: UIColor
+    let poiType: POIType
     let position: CGPoint
+}
+
+enum POIType: String, CaseIterable {
+    case mainDining = "Cafeteria"
+    case w4Dining = "W4 Cafeteria"
+    case e1Market = "E1 Mitsuwa Market"
+    case w1Market = "W1 Mitsuwa Market"
+    case gym = "Fitness Center"
+    case exCenter = "Musuem"
+    case unify = "Unify FCU"
+    case clinic = "Concentra Clinic"
+    case pharmacy = "Walmart Pharmacy"
+    case eastCoffee = "Starbucks #1"
+    case westCoffee = "Starbucks #2"
+    
+    func iconBackgroundColor() -> UIColor {
+        switch self {
+        case .mainDining, .w4Dining: return UIColor.orange
+        case .e1Market, .w1Market: return UIColor.green
+        case .gym, .exCenter: return UIColor.purple
+        case .unify: return UIColor.purple
+        case .clinic: return UIColor.cyan
+        case .pharmacy: return UIColor.blue
+        case .eastCoffee, .westCoffee: return UIColor.black
+        }
+    }
+    
+    func iconImage() -> UIImage? {
+        switch self {
+        case .mainDining, .w4Dining: return UIImage(named: "food")
+        case .e1Market, .w1Market: return .none
+        case .gym, .exCenter: return UIImage(named: "fun")
+        case .unify: return .none
+        case .clinic: return .none
+        case .pharmacy: return .none
+        case .eastCoffee, .westCoffee: return .none
+        }
+    }
+    
+    static func POIForPixelMarker(r: CGFloat, b: CGFloat, g: CGFloat, a: CGFloat) -> POIType? {
+        switch (r, b, g, a) {
+        case (0.0, 18.0, 111.0, 111.0): return .mainDining
+        case (0.0, 168.0, 168.0, 168.0): return .w4Dining
+        case (0.0, 168.0, 78.0, 168.0): return .e1Market
+        case (0.0, 38.0, 77.0, 168.0): return .w1Market
+        case (16.0, 64.0, 102.0, 168.0): return .gym
+        case (32.0, 116.0, 84.0, 168.0): return .exCenter
+        case (32.0, 116.0, 168.0, 168.0): return .unify
+        case (54.0, 104.0, 149.0, 168.0): return .clinic
+        case (54.0, 128.0, 43.0, 168.0): return .pharmacy
+        case (54.0, 128.0, 167.0, 168.0): return .eastCoffee
+        case (54.0, 128.0, 1.0, 168.0): return .westCoffee
+        default: return .none
+        }
+    }
+}
+
+fileprivate class POIPin: UIView {
+    let iconImageView = UIImageView()
+    var pixelInfo: Pixel?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        sharedInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        sharedInit()
+    }
+    
+    private func sharedInit() {
+        addSubview(iconImageView)
+        
+        iconImageView.tintColor = UIColor.white
+        
+        iconImageView.snp.makeConstraints { (make) in
+            make.center.equalTo(self)
+            make.height.width.equalToSuperview().multipliedBy(0.8)
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = frame.height / 2.0
+        layer.borderColor = UIColor.white.cgColor
+        layer.borderWidth = 2.0
+    }
 }
 
 class MainMapViewController: UIViewController {
@@ -20,6 +109,7 @@ class MainMapViewController: UIViewController {
     @IBOutlet weak var mainMapImageView: UIImageView!
     var previousFpcPosition: FloatingPanelPosition?
     var pixels: [Pixel] = []
+    fileprivate var poiPins: [POIPin] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +147,10 @@ class MainMapViewController: UIViewController {
         guard let image = self.mainMapImageView.image else {return}
         DispatchQueue.global(qos: .background).async { //This takes a long time, so it's done in the background. Will animate the pins in once done processing pixel markers
             self.pixels = self.findColors(image)
+            for oldPin in self.poiPins {
+                oldPin.removeFromSuperview()
+            }
+            self.poiPins = []
             for secretPixel in self.pixels {
                 DispatchQueue.main.async {
                     self.drawPOI(pixel: secretPixel)
@@ -73,18 +167,24 @@ class MainMapViewController: UIViewController {
     }
     
     private func drawPOI(pixel: Pixel) {
-        let testView = UIView()
-        testView.backgroundColor = UIColor.blue
-        mainMapImageView.addSubview(testView)
+        let poiView = POIPin()
+        poiView.backgroundColor = pixel.poiType.iconBackgroundColor()
+        poiView.iconImageView.image = pixel.poiType.iconImage()
+        mainMapImageView.addSubview(poiView)
+        poiView.pixelInfo = pixel
         
         let widthScale =  mainMapImageView.frame.width / 1000.0
         let heightScale = mainMapImageView.frame.height / 1451.0
         
-        testView.snp.makeConstraints { (make) in
-            make.width.height.equalTo(5)
-            make.centerX.equalTo(pixel.position.x * widthScale)
-            make.centerY.equalTo(pixel.position.y * heightScale)
+        UIView.animate(withDuration: 0.3) {
+            poiView.snp.makeConstraints { (make) in
+                make.width.height.equalTo(18)
+                make.centerX.equalTo(pixel.position.x * widthScale)
+                make.centerY.equalTo(pixel.position.y * heightScale)
+            }
+            poiView.layoutIfNeeded()
         }
+        
     }
     
     private func findColors(_ image: UIImage) -> [Pixel] {
@@ -109,10 +209,12 @@ class MainMapViewController: UIViewController {
                     print("Debug Color Red = \(CGFloat(data[pixelInfo]))")
                     print("Debug Color green = \(CGFloat(data[pixelInfo + 1]))")
                     print("Debug Color blue = \(CGFloat(data[pixelInfo + 2]))")
-                }
-                if data[pixelInfo + 3] != 255 {
-                    let pixel = Pixel(color: color, position: point)
-                    imageColors.append(pixel)
+                    
+                    if let poiType = POIType.POIForPixelMarker(r: CGFloat(data[pixelInfo]), b: CGFloat(data[pixelInfo + 2]), g: CGFloat(data[pixelInfo + 1]), a: CGFloat(data[pixelInfo + 3])) {
+                        let pixel = Pixel(color: color, poiType: poiType, position: point)
+                        imageColors.append(pixel)
+                        print("POI Captured: \(poiType.rawValue)")
+                    }
                 }
             }
         }
