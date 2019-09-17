@@ -60,7 +60,7 @@ class MainMapViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showNavDemo" {
-            (segue.destination as! RouteSimulationViewController).configureWithRoute(Routes.Calibrate)
+            (segue.destination as! RouteSimulationViewController).configureWithRoute(Routes.E2Route)
         }
     }
 }
