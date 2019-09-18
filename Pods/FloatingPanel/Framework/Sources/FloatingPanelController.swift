@@ -12,7 +12,9 @@ public protocol FloatingPanelControllerDelegate: class {
     // if it returns nil, FloatingPanelController uses the default behavior
     func floatingPanel(_ vc: FloatingPanelController, behaviorFor newCollection: UITraitCollection) -> FloatingPanelBehavior?
 
-    func floatingPanelDidChangePosition(_ vc: FloatingPanelController) // changed the settled position in the model layer
+    /// Called when the floating panel has changed to a new position. Can be called inside an animation block, so any
+    /// view properties set inside this function will be automatically animated alongside the panel.
+    func floatingPanelDidChangePosition(_ vc: FloatingPanelController)
 
     /// Asks the delegate if dragging should begin by the pan gesture recognizer.
     func floatingPanelShouldBeginDragging(_ vc: FloatingPanelController) -> Bool
@@ -71,6 +73,36 @@ public enum FloatingPanelPosition: Int {
 
     static var allCases: [FloatingPanelPosition] {
         return [.full, .half, .tip, .hidden]
+    }
+
+    func next(in positions: [FloatingPanelPosition]) -> FloatingPanelPosition {
+        #if swift(>=4.2)
+        guard
+            let index = positions.firstIndex(of: self),
+            positions.indices.contains(index + 1)
+            else { return self }
+        #else
+        guard
+            let index = positions.index(of: self),
+            positions.indices.contains(index + 1)
+            else { return self }
+        #endif
+        return positions[index + 1]
+    }
+
+    func pre(in positions: [FloatingPanelPosition]) -> FloatingPanelPosition {
+        #if swift(>=4.2)
+        guard
+            let index = positions.firstIndex(of: self),
+            positions.indices.contains(index - 1)
+            else { return self }
+        #else
+        guard
+            let index = positions.index(of: self),
+            positions.indices.contains(index - 1)
+            else { return self }
+        #endif
+        return positions[index - 1]
     }
 }
 
@@ -205,7 +237,8 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
         if #available(iOS 11.0, *) {}
         else {
             // Because {top,bottom}LayoutGuide is managed as a view
-            if preSafeAreaInsets != layoutInsets {
+            if preSafeAreaInsets != layoutInsets,
+                floatingPanel.isDecelerating == false {
                 self.update(safeAreaInsets: layoutInsets)
             }
         }
@@ -256,8 +289,7 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
 
     private func update(safeAreaInsets: UIEdgeInsets) {
         guard
-            preSafeAreaInsets != safeAreaInsets,
-            self.floatingPanel.isDecelerating == false
+            preSafeAreaInsets != safeAreaInsets
             else { return }
 
         log.debug("Update safeAreaInsets", safeAreaInsets)
@@ -331,7 +363,6 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
 
     /// Hides the surface view to the hidden position
     public func hide(animated: Bool = false, completion: (() -> Void)? = nil) {
-        safeAreaInsetsObservation = nil
         move(to: .hidden,
              animated: animated,
              completion: completion)
@@ -526,16 +557,7 @@ open class FloatingPanelController: UIViewController, UIScrollViewDelegate, UIGe
 
     /// Returns the y-coordinate of the point at the origin of the surface view.
     public func originYOfSurface(for pos: FloatingPanelPosition) -> CGFloat {
-        switch pos {
-        case .full:
-            return floatingPanel.layoutAdapter.topY
-        case .half:
-            return floatingPanel.layoutAdapter.middleY
-        case .tip:
-            return floatingPanel.layoutAdapter.bottomY
-        case .hidden:
-            return floatingPanel.layoutAdapter.hiddenY
-        }
+        return floatingPanel.layoutAdapter.positionY(for: pos)
     }
 }
 
