@@ -28,28 +28,31 @@ enum POIType: String, CaseIterable {
     case pharmacy = "Walmart Pharmacy"
     case eastCoffee = "Starbucks #1"
     case westCoffee = "Starbucks #2"
+    case event = "OctoberBeast"
     
     func iconBackgroundColor() -> UIColor {
         switch self {
         case .mainDining, .w4Dining: return UIColor.orange
-        case .e1Market, .w1Market: return UIColor.green
+        case .e1Market, .w1Market: return UIColor(red: 0.2, green: 0.8, blue: 0.2, alpha: 1)
         case .gym, .exCenter: return UIColor.purple
         case .unify: return UIColor.purple
         case .clinic: return UIColor.cyan
         case .pharmacy: return UIColor.blue
         case .eastCoffee, .westCoffee: return UIColor.black
+        case .event: return UIColor(red: 0.5, green: 0.8, blue: 0.8, alpha: 1)
         }
     }
     
     func iconImage() -> UIImage? {
         switch self {
         case .mainDining, .w4Dining: return UIImage(named: "food")
-        case .e1Market, .w1Market: return .none
-        case .gym, .exCenter: return UIImage(named: "fun")
-        case .unify: return .none
-        case .clinic: return .none
-        case .pharmacy: return .none
-        case .eastCoffee, .westCoffee: return .none
+        case .e1Market, .w1Market: return UIImage(named: "Market")
+        case .gym, .exCenter: return UIImage(named: "social")
+        case .unify: return UIImage(named: "Unify")
+        case .clinic: return UIImage(named: "medical")
+        case .pharmacy: return UIImage(named: "walmart")
+        case .eastCoffee, .westCoffee: return UIImage(named: "Coffee")
+        case .event: return UIImage(named: "event")
         }
     }
     
@@ -66,6 +69,7 @@ enum POIType: String, CaseIterable {
         case (54.0, 128.0, 43.0, 168.0): return .pharmacy
         case (54.0, 128.0, 167.0, 168.0): return .eastCoffee
         case (54.0, 128.0, 1.0, 168.0): return .westCoffee
+        case (168.0, 48.0, 0.0, 168.0): return .event
         default: return .none
         }
     }
@@ -74,6 +78,8 @@ enum POIType: String, CaseIterable {
 fileprivate class POIPin: UIView {
     let iconImageView = UIImageView()
     var pixelInfo: Pixel?
+    var magicButton = UIButton()
+    var tappedAction: (() -> ())?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -85,14 +91,27 @@ fileprivate class POIPin: UIView {
         sharedInit()
     }
     
+    @objc func tapped() {
+        tappedAction?()
+    }
+    
     private func sharedInit() {
         addSubview(iconImageView)
+        addSubview(magicButton)
+        magicButton.backgroundColor = UIColor.clear
+        
+        magicButton.addTarget(self, action: #selector(self.tapped), for: .touchUpInside)
         
         iconImageView.tintColor = UIColor.white
+        iconImageView.contentMode = .scaleAspectFit
         
         iconImageView.snp.makeConstraints { (make) in
             make.center.equalTo(self)
-            make.height.width.equalToSuperview().multipliedBy(0.8)
+            make.height.width.equalToSuperview().multipliedBy(0.6)
+        }
+        
+        magicButton.snp.makeConstraints { (make) in
+            make.left.right.top.bottom.equalToSuperview()
         }
     }
     
@@ -137,8 +156,10 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         fpc.set(contentViewController: contentView)
         
         fpc.addPanel(toParent: self)
-        
+        mainMapImageView.isUserInteractionEnabled = true
         scrollView.delegate = self
+        scrollView.canCancelContentTouches = false
+        scrollView.delaysContentTouches = false
         scrollView.snp.makeConstraints { (make) in
         make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
         }
@@ -209,6 +230,10 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         poiView.iconImageView.image = pixel.poiType.iconImage()
         mainMapImageView.addSubview(poiView)
         poiView.pixelInfo = pixel
+        
+        poiView.tappedAction = {
+            print("Tapped!")
+        }
         
         let widthScale =  mainMapImageView.bounds.width / 1000.0
         let heightScale = mainMapImageView.bounds.height / 1451.0
@@ -282,10 +307,10 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
 
 extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-         if indexPath.row == 1 {
-        tableView.deselectRow(at: indexPath, animated: true)
-        self.performSegue(withIdentifier: "showSplayDemo", sender: self)
-         }
+        if indexPath.row == 1 {
+            tableView.deselectRow(at: indexPath, animated: true)
+            self.performSegue(withIdentifier: "showSplayDemo", sender: self)
+        }
     }
 }
 
