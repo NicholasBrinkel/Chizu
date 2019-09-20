@@ -231,8 +231,11 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         mainMapImageView.addSubview(poiView)
         poiView.pixelInfo = pixel
         
-        poiView.tappedAction = {
-            print("Tapped!")
+        poiView.tappedAction = { [weak self] in
+            let width: CGFloat = 200
+            let height: CGFloat = 200
+            
+            self?.scrollView.zoom(to: CGRect(x: poiView.pixelInfo!.position.x - width / 2 , y: poiView.pixelInfo!.position.y - height / 2, width: width, height: height), animated: true)
         }
         
         let widthScale =  mainMapImageView.bounds.width / 1000.0
