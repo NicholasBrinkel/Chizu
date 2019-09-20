@@ -164,15 +164,18 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard let image = self.mainMapImageView.image else {return}
-        DispatchQueue.global(qos: .background).async { //This takes a long time, so it's done in the background. Will animate the pins in once done processing pixel markers
-            self.pixels = self.findColors(image)
-            for oldPin in self.poiPins {
-                oldPin.removeFromSuperview()
-            }
-            self.poiPins = []
-            for secretPixel in self.pixels {
-                DispatchQueue.main.async {
-                    self.drawPOI(pixel: secretPixel)
+        
+        if self.pixels.count < 1 {
+            DispatchQueue.global(qos: .background).async { //This takes a long time, so it's done in the background. Will animate the pins in once done processing pixel markers
+                self.pixels = self.findColors(image)
+                for oldPin in self.poiPins {
+                    oldPin.removeFromSuperview()
+                }
+                self.poiPins = []
+                for secretPixel in self.pixels {
+                    DispatchQueue.main.async {
+                        self.drawPOI(pixel: secretPixel)
+                    }
                 }
             }
         }
@@ -279,10 +282,10 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
 
 extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // if indexPath.row == 1 {
+         if indexPath.row == 1 {
         tableView.deselectRow(at: indexPath, animated: true)
         self.performSegue(withIdentifier: "showSplayDemo", sender: self)
-        // }
+         }
     }
 }
 
