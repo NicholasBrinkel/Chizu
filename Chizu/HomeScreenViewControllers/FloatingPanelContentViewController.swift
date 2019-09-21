@@ -16,6 +16,7 @@ class FloatingPanelContentViewController: UIViewController {
     var parentVC: UITableViewDelegate?
     var searchBeginBlock: (() -> ())?
     var searchCancelledBlock: (() -> ())?
+    var presentingPOI: POIType?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +62,19 @@ extension FloatingPanelContentViewController: UITableViewDataSource {
             return cell
         default:
             return UITableViewCell()
+        }
+    }
+    
+    func setPresentingPOI(_ poi: POIType) {
+        self.presentingPOI = poi
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showPOIDetail" {
+            let destination = segue.destination as! POIPreviewViewController
+            if let poi = presentingPOI {
+                destination.configure(poi: poi)
+            }
         }
     }
 }
