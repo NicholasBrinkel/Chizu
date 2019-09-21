@@ -153,8 +153,9 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
             }
         }
         
-        fpc.set(contentViewController: contentView)
+        fpc.view.layer.cornerRadius = 8
         
+        fpc.set(contentViewController: contentView)
         fpc.addPanel(toParent: self)
         mainMapImageView.isUserInteractionEnabled = true
         scrollView.delegate = self
@@ -163,6 +164,8 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         scrollView.snp.makeConstraints { (make) in
         make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
         }
+        
+        fpc.contentViewController?.definesPresentationContext = true
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -236,6 +239,12 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
             let height: CGFloat = 200
             
             self?.scrollView.zoom(to: CGRect(x: poiView.pixelInfo!.position.x - width / 2 , y: poiView.pixelInfo!.position.y - height / 2, width: width, height: height), animated: true)
+            
+            let poiPrevVC = self?.storyboard?.instantiateViewController(withIdentifier: "POIPreviewViewController") as! POIPreviewViewController
+            poiPrevVC.configure(poi: poiView.pixelInfo!.poiType)
+            
+            self?.fpc.set(contentViewController: poiPrevVC)
+            self?.fpc.move(to: .tip, animated: true)
         }
         
         let widthScale =  mainMapImageView.bounds.width / 1000.0
@@ -285,6 +294,13 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         }
         return imageColors
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showNavDemo" {
+            let vc = segue.destination as! RouteSimulationViewController
+            vc.configureWithRoute(Routes.E2Route)
+        }
+    }
 }
 
 extension MainMapViewController: FloatingPanelControllerDelegate {
@@ -302,7 +318,7 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
             case .full: return 18.0
             case .half: return UIScreen.main.bounds.height / 2.0 // A bottom inset from the safe area
             case .tip: return UIScreen.main.bounds.height / 4 // A bottom inset from the safe area
-            default: return nil // Or `case .hidden: return nil`
+            case .hidden: return nil
             }
         }
     }
@@ -312,7 +328,7 @@ extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 1 {
             tableView.deselectRow(at: indexPath, animated: true)
-            self.performSegue(withIdentifier: "showSplayDemo", sender: self)
+            self.performSegue(withIdentifier: "showNavDemo", sender: self)
         }
     }
 }

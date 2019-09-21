@@ -13,6 +13,7 @@ class RouteSimulationViewController: UIViewController {
     @IBOutlet weak var currentInst: UILabel!
     @IBOutlet weak var floors: PerspectiveStackView!
     @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var endNavButton: UIButton!
     
     private var route: Route!
     private var currentStep: Step! {
@@ -44,9 +45,10 @@ class RouteSimulationViewController: UIViewController {
             floors.add(view: floor)
         }
         
-        floors.spacing = 140
+        floors.spacing = 90
         
         nextButton.layer.cornerRadius = 8
+        endNavButton.layer.cornerRadius = 8
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -149,5 +151,9 @@ class RouteSimulationViewController: UIViewController {
     
     @IBAction func nextButtonPressed(_ sender: Any) {
         nextStep()
+    }
+    
+    @IBAction func endNavButtonPressed(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
