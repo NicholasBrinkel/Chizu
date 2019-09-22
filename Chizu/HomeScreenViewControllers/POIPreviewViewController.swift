@@ -50,7 +50,14 @@ class POIPreviewViewController: UIViewController {
     
     @IBAction func favButtonPressed(_ sender: Any) {
         if let poi = self.poi {
-            FavoritesData.favorites.append(poi)
+            if !FavoritesData.favorites.contains(poi) {
+                FavoritesData.favorites.append(poi)
+                NotificationCenter.default.post(name: NSNotification.Name.favAdded, object: nil)
+            }
         }
     }
+}
+
+extension NSNotification.Name {
+    static let favAdded = NSNotification.Name("FavoriteAdded")
 }

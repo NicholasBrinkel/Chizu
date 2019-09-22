@@ -25,6 +25,12 @@ class FloatingPanelContentViewController: UIViewController {
         tableView.delegate = parentVC
         searchBar.delegate = self
         searchBar.showsCancelButton = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableView), name: NSNotification.Name.favAdded, object: nil)
+    }
+    
+    @objc func reloadTableView() {
+        self.tableView.reloadData()
     }
 }
 
@@ -54,7 +60,7 @@ extension FloatingPanelContentViewController: UITableViewDataSource {
             print(tableView)
             cell.iconImageView.image = UIImage(named: "like")
             cell.titleLabel.text = "Favorites"
-            cell.subTitleLabel.text = "0 Places"
+            cell.subTitleLabel.text = "\(FavoritesData.favorites.count) Place\(FavoritesData.favorites.count == 1 ? "" : "s")"
             return cell
         case 1:
             let cell = UITableViewCell()

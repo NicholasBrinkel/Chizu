@@ -144,6 +144,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         
         self.poiSearchVC = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController") as! FloatingPanelContentViewController
         self.poiSearchVC.parentVC = self
+        
         self.poiSearchVC.searchBeginBlock = { [weak self] in
             self?.previousFpcPosition = self?.fpc.position
             self?.fpc.move(to: .full, animated: true)
@@ -208,8 +209,8 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
                 }
             }
         }
-        fpc.addPanel(toParent: self)
         
+        fpc.addPanel(toParent: self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -346,7 +347,7 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
             switch position {
             case .full: return 18.0
             case .half: return UIScreen.main.bounds.height / 2.0 // A bottom inset from the safe area
-            case .tip: return UIScreen.main.bounds.height / 4 // A bottom inset from the safe area
+            case .tip: return 180 // A bottom inset from the safe area
             case .hidden: return nil
             }
         }
