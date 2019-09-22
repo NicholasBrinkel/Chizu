@@ -131,6 +131,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     fileprivate var poiPins: [POIPin] = []
     @IBOutlet weak var scrollView: UIScrollView!
     private var firstLoad = true
+    private var poiSearchVC: FloatingPanelContentViewController!
     
     private var scaleWidth: CGFloat!
     private var scaleHeight: CGFloat!
@@ -141,14 +142,14 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         fpc = FloatingPanelController()
         fpc.delegate = self
         
-        let contentView = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController") as! FloatingPanelContentViewController
-        contentView.parentVC = self
-        contentView.searchBeginBlock = { [weak self] in
+        self.poiSearchVC = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController") as! FloatingPanelContentViewController
+        self.poiSearchVC.parentVC = self
+        self.poiSearchVC.searchBeginBlock = { [weak self] in
             self?.previousFpcPosition = self?.fpc.position
             self?.fpc.move(to: .full, animated: true)
         }
         
-        contentView.searchCancelledBlock = { [weak self] in
+        self.poiSearchVC.searchCancelledBlock = { [weak self] in
             if let previousPosition = self?.previousFpcPosition {
                 self?.fpc.move(to: previousPosition, animated: true)
                 self?.previousFpcPosition = .none
@@ -159,7 +160,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         
         fpc.view.layer.cornerRadius = 8
         
-        fpc.set(contentViewController: contentView)
+        fpc.set(contentViewController: self.poiSearchVC)
         fpc.addPanel(toParent: self)
         mainMapImageView.isUserInteractionEnabled = true
         scrollView.delegate = self
@@ -169,7 +170,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
         }
         
-        scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(sizeScrollViewToFit)))
+        scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(resetFPC)))
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -313,6 +314,12 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
             let vc = segue.destination as! RouteSimulationViewController
             vc.configureWithRoute(Routes.E2Route)
         }
+    }
+    
+    @objc func resetFPC() {
+        self.fpc.set(contentViewController: self.poiSearchVC)
+        self.sizeScrollViewToFit()
+        self.fpc.move(to: .tip, animated: true)
     }
 }
 

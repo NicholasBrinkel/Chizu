@@ -22,29 +22,52 @@
                                 <rect key="frame" x="0.0" y="116" width="414" height="620"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoritesCell" textLabel="SL7-HA-n1x" detailTextLabel="1fY-dT-xt2" style="IBUITableViewCellStyleValue2" id="RWn-tM-Gb9">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="FavoritesCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoritesCell" rowHeight="50" id="RWn-tM-Gb9" customClass="FavoritesCell" customModule="Chizu" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RWn-tM-Gb9" id="6Wb-Be-rkz">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="49.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SL7-HA-n1x">
-                                                    <rect key="frame" x="20" y="14" width="91" height="15.666666666666666"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1fY-dT-xt2">
-                                                    <rect key="frame" x="117" y="14" width="35" height="15.666666666666666"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="REr-gH-ndz">
+                                                    <rect key="frame" x="4" y="4" width="41.666666666666664" height="41.666666666666664"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M94-zL-swb">
+                                                            <rect key="frame" x="4" y="4" width="33.666666666666664" height="33.666666666666664"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="M94-zL-swb" secondAttribute="height" multiplier="1:1" id="oAg-W3-so0"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="REr-gH-ndz" secondAttribute="height" multiplier="1:1" id="1UF-fg-2mz"/>
+                                                        <constraint firstAttribute="trailing" secondItem="M94-zL-swb" secondAttribute="trailing" constant="4" id="R5M-TF-hCV"/>
+                                                        <constraint firstAttribute="bottom" secondItem="M94-zL-swb" secondAttribute="bottom" constant="4" id="cRG-Ry-N6n"/>
+                                                        <constraint firstItem="M94-zL-swb" firstAttribute="leading" secondItem="REr-gH-ndz" secondAttribute="leading" constant="4" id="whO-Cj-gGD"/>
+                                                        <constraint firstItem="M94-zL-swb" firstAttribute="top" secondItem="REr-gH-ndz" secondAttribute="top" constant="4" id="wuv-bb-NJ7"/>
+                                                    </constraints>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iFt-hQ-zrK">
+                                                    <rect key="frame" x="53.666666666666657" y="14.333333333333336" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="iFt-hQ-zrK" firstAttribute="leading" secondItem="REr-gH-ndz" secondAttribute="trailing" constant="8" id="0Xd-jz-V05"/>
+                                                <constraint firstAttribute="bottom" secondItem="REr-gH-ndz" secondAttribute="bottom" constant="4" id="5RJ-Bj-RAU"/>
+                                                <constraint firstItem="iFt-hQ-zrK" firstAttribute="centerY" secondItem="6Wb-Be-rkz" secondAttribute="centerY" id="Lbh-eo-aj2"/>
+                                                <constraint firstItem="REr-gH-ndz" firstAttribute="leading" secondItem="6Wb-Be-rkz" secondAttribute="leading" constant="4" id="cNY-Hn-uA0"/>
+                                                <constraint firstItem="REr-gH-ndz" firstAttribute="top" secondItem="6Wb-Be-rkz" secondAttribute="top" constant="4" id="tbh-sJ-Lhh"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="iconImageBackgroundView" destination="REr-gH-ndz" id="ApS-wS-5fQ"/>
+                                            <outlet property="iconImageView" destination="M94-zL-swb" id="S92-km-orJ"/>
+                                            <outlet property="poiName" destination="iFt-hQ-zrK" id="z14-IE-rXz"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
