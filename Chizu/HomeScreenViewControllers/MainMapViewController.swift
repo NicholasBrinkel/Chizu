@@ -249,16 +249,8 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         poiView.pixelInfo = pixel
         
         poiView.tappedAction = { [weak self] in
-            let width: CGFloat = 200
-            let height: CGFloat = 200
             
-            self?.scrollView.zoom(to: CGRect(x: poiView.pixelInfo!.position.x - width / 2 , y: poiView.pixelInfo!.position.y - height / 2, width: width, height: height), animated: true)
-            
-            let poiPrevVC = self?.storyboard?.instantiateViewController(withIdentifier: "POIPreviewViewController") as! POIPreviewViewController
-            poiPrevVC.configure(poi: poiView.pixelInfo!.poiType)
-            
-            self?.fpc.set(contentViewController: poiPrevVC)
-            self?.fpc.move(to: .tip, animated: true)
+            self?.zoomOnPOI(pixel.poiType)
         }
         
         let widthScale =  mainMapImageView.bounds.width / 1000.0
@@ -273,6 +265,23 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
             poiView.layoutIfNeeded()
         }
         
+    }
+    
+    private func zoomOnPOI(_ poi: POIType) {
+        let width: CGFloat = 200
+        let height: CGFloat = 200
+        
+        guard let poiPixel = self.pixels.first(where: { $0.poiType == poi} ) else {
+            
+            return }
+        
+        self.scrollView.zoom(to: CGRect(x: poiPixel.position.x - width / 2 , y: poiPixel.position.y - height / 2, width: width, height: height), animated: true)
+        
+        let poiPreviewVC = self.storyboard?.instantiateViewController(withIdentifier: "POIPreviewViewController") as! POIPreviewViewController
+        poiPreviewVC.configure(poi: poi)
+        
+        self.fpc.set(contentViewController: poiPreviewVC)
+        self.fpc.move(to: .tip, animated: true)
     }
     
     private func findColors(_ image: UIImage) -> [Pixel] {
@@ -348,14 +357,23 @@ extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             tableView.deselectRow(at: indexPath, animated: true)
-        let favoritesVC = storyboard?.instantiateViewController(withIdentifier: "FavoritesNavViewController")
+        let favoritesNavVC = storyboard?.instantiateViewController(withIdentifier: "FavoritesNavViewController") as! UINavigationController
             
-            self.fpc.set(contentViewController: favoritesVC)
+            let favoritesVC = favoritesNavVC.viewControllers.first as? FavoritesViewController
+            favoritesVC?.delegate = self
+            
+            self.fpc.set(contentViewController: favoritesNavVC)
             self.fpc.move(to: .full, animated: true)
         } else if indexPath.row == 1 {
             tableView.deselectRow(at: indexPath, animated: true)
             self.performSegue(withIdentifier: "showNavDemo", sender: self)
         }
+    }
+}
+
+extension MainMapViewController: FavoritesDelegate {
+    func favoriteTapped(_ poi: POIType) {
+        self.zoomOnPOI(poi)
     }
 }
 

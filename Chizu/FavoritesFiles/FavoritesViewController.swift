@@ -8,8 +8,14 @@
 
 import UIKit
 
+protocol FavoritesDelegate: class {
+    func favoriteTapped(_ poi: POIType)
+}
+
 class FavoritesViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
+    
+    weak var delegate: FavoritesDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +46,11 @@ extension FavoritesViewController: UITableViewDataSource {
 }
 
 extension FavoritesViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let tappedCell = tableView.cellForRow(at: indexPath) as? FavoritesCell else { return }
+        
+        delegate?.favoriteTapped(tappedCell.poi)
+    }
 }
 
 class FavoritesCell: UITableViewCell {
@@ -48,7 +58,7 @@ class FavoritesCell: UITableViewCell {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var iconImageBackgroundView: UIView!
     
-    private var poi: POIType!
+    var poi: POIType!
     
     func configureWithPOI(_ poi: POIType) {
         self.poi = poi
