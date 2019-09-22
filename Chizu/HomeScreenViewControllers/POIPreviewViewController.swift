@@ -12,7 +12,8 @@ class POIPreviewViewController: UIViewController {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var startRouteButton: UIButton!
-    @IBOutlet weak var iconImaeViewBackground: UIView!
+    @IBOutlet weak var iconImageViewBackground: UIView!
+    @IBOutlet weak var favButton: UIButton!
     
     var poi: POIType?
     
@@ -21,14 +22,15 @@ class POIPreviewViewController: UIViewController {
         
         startRouteButton.layer.cornerRadius = 8
         iconImageView.layer.cornerRadius = iconImageView.frame.width / 2
-        iconImaeViewBackground.layer.cornerRadius = iconImaeViewBackground.frame.width / 2
+        iconImageViewBackground.layer.cornerRadius = iconImageViewBackground.frame.width / 2
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.tintColor = .white
+        favButton.layer.cornerRadius = favButton.frame.width / 2
         
         self.iconImageView.image = poi!.iconImage()
         self.nameLabel.text = poi!.rawValue
         self.iconImageView.backgroundColor = poi!.iconBackgroundColor()
-        self.iconImaeViewBackground.backgroundColor = poi!.iconBackgroundColor()
+        self.iconImageViewBackground.backgroundColor = poi!.iconBackgroundColor()
     }
     
     func configure(poi: POIType) {
