@@ -23,6 +23,8 @@
 		01F831C622E8BE99000051AB /* StackViewTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F831C522E8BE99000051AB /* StackViewTestViewController.swift */; };
 		4FEF6F6CE43AC0F8F1680921 /* Pods_Chizu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B03285183F96143397FB2EC /* Pods_Chizu.framework */; };
 		85CDB694233513DC00356E7D /* POIPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDB693233513DC00356E7D /* POIPreviewViewController.swift */; };
+		85CDB69A2337906E00356E7D /* FavoritesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDB6992337906E00356E7D /* FavoritesData.swift */; };
+		85CDB69C233795A600356E7D /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDB69B233795A600356E7D /* FavoritesViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		2E3CEB4176398EFCC994200C /* Pods-Chizu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Chizu.release.xcconfig"; path = "Target Support Files/Pods-Chizu/Pods-Chizu.release.xcconfig"; sourceTree = "<group>"; };
 		7B03285183F96143397FB2EC /* Pods_Chizu.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Chizu.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85CDB693233513DC00356E7D /* POIPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIPreviewViewController.swift; sourceTree = "<group>"; };
+		85CDB6992337906E00356E7D /* FavoritesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesData.swift; sourceTree = "<group>"; };
+		85CDB69B233795A600356E7D /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,7 @@
 		010FAF0C22C6AE2D00F2252D /* Chizu */ = {
 			isa = PBXGroup;
 			children = (
+				85CDB6952337902600356E7D /* FavoritesFiles */,
 				010FAF0D22C6AE2D00F2252D /* AppDelegate.swift */,
 				010FAF1122C6AE2D00F2252D /* Main.storyboard */,
 				010FAF1422C6AE2D00F2252D /* Assets.xcassets */,
@@ -149,6 +154,15 @@
 				7B03285183F96143397FB2EC /* Pods_Chizu.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		85CDB6952337902600356E7D /* FavoritesFiles */ = {
+			isa = PBXGroup;
+			children = (
+				85CDB6992337906E00356E7D /* FavoritesData.swift */,
+				85CDB69B233795A600356E7D /* FavoritesViewController.swift */,
+			);
+			path = FavoritesFiles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +284,7 @@
 				0114CE3122E7DD910020F007 /* PerspectiveStackView.swift in Sources */,
 				85CDB694233513DC00356E7D /* POIPreviewViewController.swift in Sources */,
 				01F831C622E8BE99000051AB /* StackViewTestViewController.swift in Sources */,
+				85CDB69A2337906E00356E7D /* FavoritesData.swift in Sources */,
 				012B3125232691E70020F7E0 /* PathCreator.swift in Sources */,
 				012B312823285B5C0020F7E0 /* Grid.swift in Sources */,
 				0114CE2522E78DE40020F007 /* MainMapViewController.swift in Sources */,
@@ -277,6 +292,7 @@
 				0129A765232C38290024C342 /* RouteSimulationViewController.swift in Sources */,
 				0129A767232C38B80024C342 /* Routes.swift in Sources */,
 				010FAF0E22C6AE2D00F2252D /* AppDelegate.swift in Sources */,
+				85CDB69C233795A600356E7D /* FavoritesViewController.swift in Sources */,
 				015F39C722E9227800F8A8B2 /* PerspectiveView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
