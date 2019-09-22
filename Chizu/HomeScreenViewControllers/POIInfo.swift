@@ -22,6 +22,7 @@ enum POIType: String, CaseIterable {
     case eastCoffee = "Starbucks #1"
     case westCoffee = "Starbucks #2"
     case event = "OctoberBeast"
+    case user = "User"
     
     func ctaTitle() -> String? {
         switch self {
@@ -43,6 +44,7 @@ enum POIType: String, CaseIterable {
             return .none
         case .event:
             return "Event Details"
+        case .user: return .none
         }
     }
     
@@ -72,6 +74,8 @@ enum POIType: String, CaseIterable {
             return "8 AM - 3 PM"
         case .event:
             return "October 3rd, 11 AM - 1 PM"
+        case .user:
+            return ""
        
         }
     }
@@ -172,6 +176,7 @@ enum POIType: String, CaseIterable {
             return self.menuWrapperView(menuImage: UIImage(named: "WestCoffeeMenu")!)
         case .event:
             return self.menuWrapperView(menuImage: UIImage(named: "EventDetails")!)
+        case .user: return .none
         }
     }
     
@@ -185,6 +190,7 @@ enum POIType: String, CaseIterable {
         case .pharmacy: return UIColor.blue
         case .eastCoffee, .westCoffee: return UIColor.black
         case .event: return UIColor(red: 0.5, green: 0.8, blue: 0.8, alpha: 1)
+        case .user: return UIColor.blue
         }
     }
     
@@ -198,6 +204,7 @@ enum POIType: String, CaseIterable {
         case .pharmacy: return UIImage(named: "walmart")
         case .eastCoffee, .westCoffee: return UIImage(named: "Coffee")
         case .event: return UIImage(named: "event")
+        case .user: return .none
         }
     }
     
@@ -215,6 +222,7 @@ enum POIType: String, CaseIterable {
         case (54.0, 128.0, 167.0, 168.0): return .eastCoffee
         case (54.0, 128.0, 1.0, 168.0): return .westCoffee
         case (168.0, 48.0, 0.0, 168.0): return .event
+        case (168.0, 168.0, 94.0, 168.0): return .user
         default: return .none
         }
     }

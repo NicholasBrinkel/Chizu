@@ -16,7 +16,33 @@ struct Pixel {
     let position: CGPoint
 }
 
-
+fileprivate class UserLocationPin: UIView {
+    let iconImageView = UIImageView()
+    var pixelInfo: Pixel?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        sharedInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        sharedInit()
+    }
+    
+    private func sharedInit() {
+        addSubview(iconImageView)
+        
+        iconImageView.backgroundColor = UIColor.white
+        iconImageView.layer.borderColor = UIColor.blue.cgColor
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = frame.height / 2.0
+        layer.borderWidth = 10.0
+    }
+}
 
 fileprivate class POIPin: UIView {
     let iconImageView = UIImageView()
@@ -74,6 +100,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     fileprivate var poiPins: [POIPin] = []
     @IBOutlet weak var scrollView: UIScrollView!
     fileprivate var scaleCalculated = false
+    fileprivate var userLocationPulseView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -175,37 +202,75 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func drawPOI(pixel: Pixel) {
-        let poiView = POIPin()
-        poiView.backgroundColor = pixel.poiType.iconBackgroundColor()
-        poiView.iconImageView.image = pixel.poiType.iconImage()
-        mainMapImageView.addSubview(poiView)
-        poiView.pixelInfo = pixel
-        
-        poiView.tappedAction = { [weak self] in
-            let width: CGFloat = 200
-            let height: CGFloat = 200
+        if pixel.poiType != .user {
+            let poiView = POIPin()
+            poiView.backgroundColor = pixel.poiType.iconBackgroundColor()
+            poiView.iconImageView.image = pixel.poiType.iconImage()
+            mainMapImageView.addSubview(poiView)
+            poiView.pixelInfo = pixel
             
-            self?.scrollView.zoom(to: CGRect(x: poiView.pixelInfo!.position.x - width / 2 , y: poiView.pixelInfo!.position.y - height / 2, width: width, height: height), animated: true)
-            
-            let poiPrevVC = self?.storyboard?.instantiateViewController(withIdentifier: "POIPreviewViewController") as! POIPreviewViewController
-            poiPrevVC.configure(poi: poiView.pixelInfo!.poiType)
-            
-            self?.fpc.set(contentViewController: poiPrevVC)
-            self?.fpc.move(to: .tip, animated: true)
-        }
-        
-        let widthScale =  mainMapImageView.bounds.width / 1000.0
-        let heightScale = mainMapImageView.bounds.height / 1451.0
-        
-        UIView.animate(withDuration: 0.3) {
-            poiView.snp.makeConstraints { (make) in
-                make.width.height.equalTo(18 / self.scrollView.zoomScale)
-                make.centerX.equalTo(pixel.position.x * widthScale)
-                make.centerY.equalTo(pixel.position.y * heightScale)
+            poiView.tappedAction = { [weak self] in
+                let width: CGFloat = 200
+                let height: CGFloat = 200
+                
+                self?.scrollView.zoom(to: CGRect(x: poiView.pixelInfo!.position.x - width / 2 , y: poiView.pixelInfo!.position.y - height / 2, width: width, height: height), animated: true)
+                
+                let poiPrevVC = self?.storyboard?.instantiateViewController(withIdentifier: "POIPreviewViewController") as! POIPreviewViewController
+                poiPrevVC.configure(poi: poiView.pixelInfo!.poiType)
+                
+                self?.fpc.set(contentViewController: poiPrevVC)
+                self?.fpc.move(to: .tip, animated: true)
             }
-            poiView.layoutIfNeeded()
+            
+            let widthScale =  mainMapImageView.bounds.width / 1000.0
+            let heightScale = mainMapImageView.bounds.height / 1451.0
+            
+            UIView.animate(withDuration: 0.3) {
+                poiView.snp.makeConstraints { (make) in
+                    make.width.height.equalTo(18 / self.scrollView.zoomScale)
+                    make.centerX.equalTo(pixel.position.x * widthScale)
+                    make.centerY.equalTo(pixel.position.y * heightScale)
+                }
+                poiView.layoutIfNeeded()
+            }
+        } else {
+            let poiView = UserLocationPin()
+            
+            poiView.backgroundColor = UIColor.white
+            poiView.layer.borderColor = UIColor.blue.cgColor
+            
+            mainMapImageView.addSubview(poiView)
+            
+            poiView.pixelInfo = pixel
+            
+            let widthScale =  mainMapImageView.bounds.width / 1000.0
+            let heightScale = mainMapImageView.bounds.height / 1451.0
+            self.userLocationPulseView = UIView()
+            mainMapImageView.addSubview(userLocationPulseView)
+            self.userLocationPulseView.backgroundColor = UIColor.blue.withAlphaComponent(0.9)
+            self.userLocationPulseView.layer.cornerRadius = (24 / self.scrollView.zoomScale) / 2
+            self.userLocationPulseView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            
+            UIView.animate(withDuration: 0.3) {
+                poiView.snp.makeConstraints { (make) in
+                    make.width.height.equalTo(12 / self.scrollView.zoomScale)
+                    make.centerX.equalTo(pixel.position.x * widthScale)
+                    make.centerY.equalTo(pixel.position.y * heightScale)
+                }
+                self.userLocationPulseView.snp.makeConstraints({ (make) in
+                    make.width.height.equalTo(24 / self.scrollView.zoomScale)
+                    make.centerX.equalTo(pixel.position.x * widthScale)
+                    make.centerY.equalTo(pixel.position.y * heightScale)
+                })
+                
+                poiView.layoutIfNeeded()
+            }
+            
+            UIView.animate(withDuration: 2.0, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.1, options: UIView.AnimationOptions.repeat, animations: {
+                self.userLocationPulseView.transform = .identity
+                self.userLocationPulseView.alpha = 0.1
+            }, completion: .none)
         }
-        
     }
     
     private func findColors(_ image: UIImage) -> [Pixel] {
