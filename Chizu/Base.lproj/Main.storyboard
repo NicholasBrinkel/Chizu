@@ -13,7 +13,7 @@
         <!--Favorites-->
         <scene sceneID="Je1-yT-xOp">
             <objects>
-                <viewController id="iNe-lA-RIK" customClass="FavoritesViewController" customModule="Chizu" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FavoritesViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iNe-lA-RIK" customClass="FavoritesViewController" customModule="Chizu" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6oM-mN-UfZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -625,7 +625,7 @@
         <!--Navigation Controller-->
         <scene sceneID="bLY-v0-qIx">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rGG-MM-H1g" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="FavoritesNavViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rGG-MM-H1g" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="5FS-Ve-PTS">
                         <rect key="frame" x="0.0" y="20" width="414" height="96"/>

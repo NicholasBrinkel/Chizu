@@ -326,7 +326,13 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
 
 extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 1 {
+        if indexPath.row == 0 {
+            tableView.deselectRow(at: indexPath, animated: true)
+        let favoritesVC = storyboard?.instantiateViewController(withIdentifier: "FavoritesNavViewController")
+            
+            self.fpc.set(contentViewController: favoritesVC)
+            self.fpc.move(to: .full, animated: true)
+        } else if indexPath.row == 1 {
             tableView.deselectRow(at: indexPath, animated: true)
             self.performSegue(withIdentifier: "showNavDemo", sender: self)
         }
