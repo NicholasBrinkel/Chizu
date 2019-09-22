@@ -16,64 +16,7 @@ struct Pixel {
     let position: CGPoint
 }
 
-enum POIType: String, CaseIterable {
-    case mainDining = "Cafeteria"
-    case w4Dining = "W4 Cafeteria"
-    case e1Market = "E1 Mitsuwa Market"
-    case w1Market = "W1 Mitsuwa Market"
-    case gym = "Fitness Center"
-    case exCenter = "Musuem"
-    case unify = "Unify FCU"
-    case clinic = "Concentra Clinic"
-    case pharmacy = "Walmart Pharmacy"
-    case eastCoffee = "Starbucks #1"
-    case westCoffee = "Starbucks #2"
-    case event = "OctoberBeast"
-    
-    func iconBackgroundColor() -> UIColor {
-        switch self {
-        case .mainDining, .w4Dining: return UIColor.orange
-        case .e1Market, .w1Market: return UIColor(red: 0.2, green: 0.8, blue: 0.2, alpha: 1)
-        case .gym, .exCenter: return UIColor.purple
-        case .unify: return UIColor.purple
-        case .clinic: return UIColor.cyan
-        case .pharmacy: return UIColor.blue
-        case .eastCoffee, .westCoffee: return UIColor.black
-        case .event: return UIColor(red: 0.5, green: 0.8, blue: 0.8, alpha: 1)
-        }
-    }
-    
-    func iconImage() -> UIImage? {
-        switch self {
-        case .mainDining, .w4Dining: return UIImage(named: "food")
-        case .e1Market, .w1Market: return UIImage(named: "Market")
-        case .gym, .exCenter: return UIImage(named: "social")
-        case .unify: return UIImage(named: "Unify")
-        case .clinic: return UIImage(named: "medical")
-        case .pharmacy: return UIImage(named: "walmart")
-        case .eastCoffee, .westCoffee: return UIImage(named: "Coffee")
-        case .event: return UIImage(named: "event")
-        }
-    }
-    
-    static func POIForPixelMarker(r: CGFloat, b: CGFloat, g: CGFloat, a: CGFloat) -> POIType? {
-        switch (r, b, g, a) {
-        case (0.0, 18.0, 111.0, 111.0): return .mainDining
-        case (0.0, 168.0, 168.0, 168.0): return .w4Dining
-        case (0.0, 168.0, 78.0, 168.0): return .e1Market
-        case (0.0, 38.0, 77.0, 168.0): return .w1Market
-        case (16.0, 64.0, 102.0, 168.0): return .gym
-        case (32.0, 116.0, 84.0, 168.0): return .exCenter
-        case (32.0, 116.0, 168.0, 168.0): return .unify
-        case (54.0, 104.0, 149.0, 168.0): return .clinic
-        case (54.0, 128.0, 43.0, 168.0): return .pharmacy
-        case (54.0, 128.0, 167.0, 168.0): return .eastCoffee
-        case (54.0, 128.0, 1.0, 168.0): return .westCoffee
-        case (168.0, 48.0, 0.0, 168.0): return .event
-        default: return .none
-        }
-    }
-}
+
 
 fileprivate class POIPin: UIView {
     let iconImageView = UIImageView()
@@ -130,6 +73,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     var pixels: [Pixel] = []
     fileprivate var poiPins: [POIPin] = []
     @IBOutlet weak var scrollView: UIScrollView!
+    fileprivate var scaleCalculated = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -210,15 +154,18 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        scrollView.contentSize = mainMapImageView.frame.size
-        let scaleWidth = scrollView.frame.size.width / scrollView.contentSize.width
-        let scaleHeight = scrollView.frame.size.height / scrollView.contentSize.height
-        let minScale = min(scaleWidth, scaleHeight)
-        
-        scrollView.minimumZoomScale = minScale * 0.99
-        scrollView.maximumZoomScale = 50.0
-        
-        scrollView.setZoomScale(minScale * 0.9, animated: true)
+        if scaleCalculated == false {
+            scrollView.contentSize = mainMapImageView.frame.size
+            let scaleWidth = scrollView.frame.size.width / scrollView.contentSize.width
+            let scaleHeight = scrollView.frame.size.height / scrollView.contentSize.height
+            let minScale = min(scaleWidth, scaleHeight)
+            
+            scrollView.minimumZoomScale = minScale * 0.99
+            scrollView.maximumZoomScale = 50.0
+            
+            scrollView.setZoomScale(minScale * 0.9, animated: true)
+            scaleCalculated = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

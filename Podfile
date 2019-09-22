@@ -8,5 +8,6 @@ target 'Chizu' do
   # Pods for Chizu
 pod 'FloatingPanel'
 pod 'SnapKit'
+pod 'ImageScrollView'
 
 end
