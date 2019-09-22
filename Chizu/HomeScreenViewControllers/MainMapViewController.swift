@@ -16,62 +16,31 @@ struct Pixel {
     let position: CGPoint
 }
 
-enum POIType: String, CaseIterable {
-    case mainDining = "Cafeteria"
-    case w4Dining = "W4 Cafeteria"
-    case e1Market = "E1 Mitsuwa Market"
-    case w1Market = "W1 Mitsuwa Market"
-    case gym = "Fitness Center"
-    case exCenter = "Musuem"
-    case unify = "Unify FCU"
-    case clinic = "Concentra Clinic"
-    case pharmacy = "Walmart Pharmacy"
-    case eastCoffee = "Starbucks #1"
-    case westCoffee = "Starbucks #2"
-    case event = "OctoberBeast"
+fileprivate class UserLocationPin: UIView {
+    let iconImageView = UIImageView()
+    var pixelInfo: Pixel?
     
-    func iconBackgroundColor() -> UIColor {
-        switch self {
-        case .mainDining, .w4Dining: return UIColor.orange
-        case .e1Market, .w1Market: return UIColor(red: 0.2, green: 0.8, blue: 0.2, alpha: 1)
-        case .gym, .exCenter: return UIColor.purple
-        case .unify: return UIColor.purple
-        case .clinic: return UIColor.cyan
-        case .pharmacy: return UIColor.blue
-        case .eastCoffee, .westCoffee: return UIColor.black
-        case .event: return UIColor(red: 0.5, green: 0.8, blue: 0.8, alpha: 1)
-        }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        sharedInit()
     }
     
-    func iconImage() -> UIImage? {
-        switch self {
-        case .mainDining, .w4Dining: return UIImage(named: "food")
-        case .e1Market, .w1Market: return UIImage(named: "Market")
-        case .gym, .exCenter: return UIImage(named: "social")
-        case .unify: return UIImage(named: "Unify")
-        case .clinic: return UIImage(named: "medical")
-        case .pharmacy: return UIImage(named: "walmart")
-        case .eastCoffee, .westCoffee: return UIImage(named: "Coffee")
-        case .event: return UIImage(named: "event")
-        }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        sharedInit()
     }
     
-    static func POIForPixelMarker(r: CGFloat, b: CGFloat, g: CGFloat, a: CGFloat) -> POIType? {
-        switch (r, b, g, a) {
-        case (0.0, 18.0, 111.0, 111.0): return .mainDining
-        case (0.0, 168.0, 168.0, 168.0): return .w4Dining
-        case (0.0, 168.0, 78.0, 168.0): return .e1Market
-        case (0.0, 38.0, 77.0, 168.0): return .w1Market
-        case (16.0, 64.0, 102.0, 168.0): return .gym
-        case (32.0, 116.0, 84.0, 168.0): return .exCenter
-        case (32.0, 116.0, 168.0, 168.0): return .unify
-        case (54.0, 104.0, 149.0, 168.0): return .clinic
-        case (54.0, 128.0, 43.0, 168.0): return .pharmacy
-        case (54.0, 128.0, 167.0, 168.0): return .eastCoffee
-        case (54.0, 128.0, 1.0, 168.0): return .westCoffee
-        case (168.0, 48.0, 0.0, 168.0): return .event
-        default: return .none
-        }
+    private func sharedInit() {
+        addSubview(iconImageView)
+        
+        iconImageView.backgroundColor = UIColor.white
+        iconImageView.layer.borderColor = UIColor.blue.cgColor
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = frame.height / 2.0
+        layer.borderWidth = 10.0
     }
 }
 
@@ -132,6 +101,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     private var firstLoad = true
     private var poiSearchVC: FloatingPanelContentViewController!
+    private var userLocationPulseView: UIView!
     
     private var scaleWidth: CGFloat!
     private var scaleHeight: CGFloat!
@@ -165,8 +135,8 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         fpc.addPanel(toParent: self)
         mainMapImageView.isUserInteractionEnabled = true
         scrollView.delegate = self
-        scrollView.canCancelContentTouches = false
-        scrollView.delaysContentTouches = false
+        //scrollView.canCancelContentTouches = false
+        //scrollView.delaysContentTouches = false
         scrollView.snp.makeConstraints { (make) in
         make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
         }
@@ -243,29 +213,66 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func drawPOI(pixel: Pixel) {
-        let poiView = POIPin()
-        poiView.backgroundColor = pixel.poiType.iconBackgroundColor()
-        poiView.iconImageView.image = pixel.poiType.iconImage()
-        mainMapImageView.addSubview(poiView)
-        poiView.pixelInfo = pixel
-        
-        poiView.tappedAction = { [weak self] in
+        if pixel.poiType != .user {
+            let poiView = POIPin()
+            poiView.backgroundColor = pixel.poiType.iconBackgroundColor()
+            poiView.iconImageView.image = pixel.poiType.iconImage()
+            mainMapImageView.addSubview(poiView)
+            poiView.pixelInfo = pixel
             
-            self?.zoomOnPOI(pixel.poiType)
-        }
-        
-        let widthScale =  mainMapImageView.bounds.width / 1000.0
-        let heightScale = mainMapImageView.bounds.height / 1451.0
-        
-        UIView.animate(withDuration: 0.3) {
-            poiView.snp.makeConstraints { (make) in
-                make.width.height.equalTo(18 / self.scrollView.zoomScale)
-                make.centerX.equalTo(pixel.position.x * widthScale)
-                make.centerY.equalTo(pixel.position.y * heightScale)
+            poiView.tappedAction = { [weak self] in
+                self?.zoomOnPOI(pixel.poiType)
             }
-            poiView.layoutIfNeeded()
+            
+            let widthScale =  mainMapImageView.bounds.width / 1000.0
+            let heightScale = mainMapImageView.bounds.height / 1451.0
+            
+            UIView.animate(withDuration: 0.3) {
+                poiView.snp.makeConstraints { (make) in
+                    make.width.height.equalTo(18 / self.scrollView.zoomScale)
+                    make.centerX.equalTo(pixel.position.x * widthScale)
+                    make.centerY.equalTo(pixel.position.y * heightScale)
+                }
+                poiView.layoutIfNeeded()
+            }
+        } else {
+            let poiView = UserLocationPin()
+            
+            poiView.backgroundColor = UIColor.white
+            poiView.layer.borderColor = UIColor.blue.cgColor
+            
+            mainMapImageView.addSubview(poiView)
+            
+            poiView.pixelInfo = pixel
+            
+            let widthScale =  mainMapImageView.bounds.width / 1000.0
+            let heightScale = mainMapImageView.bounds.height / 1451.0
+            self.userLocationPulseView = UIView()
+            mainMapImageView.addSubview(userLocationPulseView)
+            self.userLocationPulseView.backgroundColor = UIColor.blue.withAlphaComponent(0.9)
+            self.userLocationPulseView.layer.cornerRadius = (24 / self.scrollView.zoomScale) / 2
+            self.userLocationPulseView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            
+            UIView.animate(withDuration: 0.3) {
+                poiView.snp.makeConstraints { (make) in
+                    make.width.height.equalTo(12 / self.scrollView.zoomScale)
+                    make.centerX.equalTo(pixel.position.x * widthScale)
+                    make.centerY.equalTo(pixel.position.y * heightScale)
+                }
+                self.userLocationPulseView.snp.makeConstraints({ (make) in
+                    make.width.height.equalTo(24 / self.scrollView.zoomScale)
+                    make.centerX.equalTo(pixel.position.x * widthScale)
+                    make.centerY.equalTo(pixel.position.y * heightScale)
+                })
+                
+                poiView.layoutIfNeeded()
+            }
+            
+            UIView.animate(withDuration: 2.0, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.1, options: UIView.AnimationOptions.repeat, animations: {
+                self.userLocationPulseView.transform = .identity
+                self.userLocationPulseView.alpha = 0.1
+            }, completion: .none)
         }
-        
     }
     
     private func zoomOnPOI(_ poi: POIType) {
