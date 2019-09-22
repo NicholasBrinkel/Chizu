@@ -289,7 +289,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         poiPreviewVC.configure(poi: poi)
         
         self.fpc.set(contentViewController: poiPreviewVC)
-        self.fpc.move(to: .tip, animated: true)
+        self.fpc.move(to: .half, animated: true)
     }
     
     private func findColors(_ image: UIImage) -> [Pixel] {
