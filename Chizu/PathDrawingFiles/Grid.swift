@@ -75,35 +75,35 @@ class Grid {
             switch device {
             case .XSMax, .XSMaxSim, .XR, .XRSim:
                 xDistanceFromLeftEdgeToContent = 39.75
-                yDistanceFromTopEdgeToContent = 29.25
+                yDistanceFromTopEdgeToContent = 32.3
                 
                 let xScaleFactor: CGFloat = 3.23
                 let yScaleFactor: CGFloat = 3.17
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .XS, .XSSim:
                 xDistanceFromLeftEdgeToContent = 39
-                yDistanceFromTopEdgeToContent = 25.4
+                yDistanceFromTopEdgeToContent = 28.45
                 
                 let xScaleFactor: CGFloat = 2.93
                 let yScaleFactor: CGFloat = 2.85743034
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .iPad_6, .iPad_6Sim:
                 xDistanceFromLeftEdgeToContent = 49
-                yDistanceFromTopEdgeToContent = 4.7
+                yDistanceFromTopEdgeToContent = 7.75
                 
                 let xScaleFactor: CGFloat = 5.25
                 let yScaleFactor: CGFloat = 5.1
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .iPhone8, .iPhone8Sim, .iPhone7, .iPhone7Sim, .iPhone6s, .iPhone6sSim, .iPhone6, .iPhone6Sim:
                 xDistanceFromLeftEdgeToContent = 40
-                yDistanceFromTopEdgeToContent = 10.25
+                yDistanceFromTopEdgeToContent = 13.3
                 
                 let xScaleFactor: CGFloat = 2.9
                 let yScaleFactor: CGFloat = 2.87
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
             case .iPhone8Plus, .iPhone8PlusSim, .iPhone7Plus, .iPhone7PlusSim, .iPhone6sPlus, .iPhone6sPlusSim, .iPhone6Plus, .iPhone6PlusSim:
                 xDistanceFromLeftEdgeToContent = 40.3
-                yDistanceFromTopEdgeToContent = 13
+                yDistanceFromTopEdgeToContent = 16.05
                 
                 let xScaleFactor: CGFloat = 3.19
                 let yScaleFactor: CGFloat = 3.17
@@ -111,7 +111,7 @@ class Grid {
             }
         } else {
             xDistanceFromLeftEdgeToContent = 43
-            yDistanceFromTopEdgeToContent = 34
+            yDistanceFromTopEdgeToContent = 37.05
             
             let xScaleFactor: CGFloat = 3.1
             let yScaleFactor: CGFloat = 3.03

@@ -12,21 +12,27 @@ class POIPreviewViewController: UIViewController {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var startRouteButton: UIButton!
-    @IBOutlet weak var iconImaeViewBackground: UIView!
     @IBOutlet weak var hooLabel: UILabel!
     @IBOutlet weak var ctaButton: UIButton!
     @IBOutlet weak var extraCtaButton: UIButton!
+    @IBOutlet weak var iconImageViewBackground: UIView!
+    @IBOutlet weak var favButton: UIButton!
     
     var poi: POIType?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        guard let poi = self.poi else {
+            return
+        }
+        
         startRouteButton.layer.cornerRadius = 8
         iconImageView.layer.cornerRadius = iconImageView.frame.width / 2
-        iconImaeViewBackground.layer.cornerRadius = iconImaeViewBackground.frame.width / 2
+        iconImageViewBackground.layer.cornerRadius = iconImageViewBackground.frame.width / 2
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.tintColor = .white
+        favButton.layer.cornerRadius = favButton.frame.width / 2
         
         hooLabel.text = "Hours: \(self.poi?.hoursOfOperationString() ?? "N/A")"
         
@@ -43,10 +49,13 @@ class POIPreviewViewController: UIViewController {
             extraCtaButton.isHidden = true
         }
         
-        self.iconImageView.image = poi!.iconImage()
-        self.nameLabel.text = poi!.rawValue
-        self.iconImageView.backgroundColor = poi!.iconBackgroundColor()
-        self.iconImaeViewBackground.backgroundColor = poi!.iconBackgroundColor()
+        self.iconImageView.image = poi.iconImage()
+        self.nameLabel.text = poi.rawValue
+        self.iconImageView.backgroundColor = poi.iconBackgroundColor()
+        self.iconImageView.image = poi.iconImage()
+        self.nameLabel.text = poi.rawValue
+        self.iconImageView.backgroundColor = poi.iconBackgroundColor()
+        self.iconImageViewBackground.backgroundColor = poi.iconBackgroundColor()
     }
     
     func configure(poi: POIType) {
@@ -71,4 +80,17 @@ class POIPreviewViewController: UIViewController {
         navDemoVC.configureWithRoute(Routes.E2Route)
         self.present(navDemoVC, animated: true)
     }
+    
+    @IBAction func favButtonPressed(_ sender: Any) {
+        if let poi = self.poi {
+            if !FavoritesData.favorites.contains(poi) {
+                FavoritesData.favorites.append(poi)
+                NotificationCenter.default.post(name: NSNotification.Name.favAdded, object: nil)
+            }
+        }
+    }
+}
+
+extension NSNotification.Name {
+    static let favAdded = NSNotification.Name("FavoriteAdded")
 }

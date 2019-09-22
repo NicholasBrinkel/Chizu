@@ -99,8 +99,12 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     var pixels: [Pixel] = []
     fileprivate var poiPins: [POIPin] = []
     @IBOutlet weak var scrollView: UIScrollView!
-    fileprivate var scaleCalculated = false
-    fileprivate var userLocationPulseView = UIView()
+    private var firstLoad = true
+    private var poiSearchVC: FloatingPanelContentViewController!
+    private var userLocationPulseView: UIView!
+    
+    private var scaleWidth: CGFloat!
+    private var scaleHeight: CGFloat!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,14 +112,15 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         fpc = FloatingPanelController()
         fpc.delegate = self
         
-        let contentView = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController") as! FloatingPanelContentViewController
-        contentView.parentVC = self
-        contentView.searchBeginBlock = { [weak self] in
+        self.poiSearchVC = self.storyboard?.instantiateViewController(withIdentifier: "FloatingPanelContentViewController") as! FloatingPanelContentViewController
+        self.poiSearchVC.parentVC = self
+        
+        self.poiSearchVC.searchBeginBlock = { [weak self] in
             self?.previousFpcPosition = self?.fpc.position
             self?.fpc.move(to: .full, animated: true)
         }
         
-        contentView.searchCancelledBlock = { [weak self] in
+        self.poiSearchVC.searchCancelledBlock = { [weak self] in
             if let previousPosition = self?.previousFpcPosition {
                 self?.fpc.move(to: previousPosition, animated: true)
                 self?.previousFpcPosition = .none
@@ -126,7 +131,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         
         fpc.view.layer.cornerRadius = 8
         
-        fpc.set(contentViewController: contentView)
+        fpc.set(contentViewController: self.poiSearchVC)
         fpc.addPanel(toParent: self)
         mainMapImageView.isUserInteractionEnabled = true
         scrollView.delegate = self
@@ -136,7 +141,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
         }
         
-        fpc.contentViewController?.definesPresentationContext = true
+        scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(resetFPC)))
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -174,25 +179,31 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
                 }
             }
         }
-        fpc.addPanel(toParent: self)
         
+        fpc.addPanel(toParent: self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if scaleCalculated == false {
-            scrollView.contentSize = mainMapImageView.frame.size
-            let scaleWidth = scrollView.frame.size.width / scrollView.contentSize.width
-            let scaleHeight = scrollView.frame.size.height / scrollView.contentSize.height
-            let minScale = min(scaleWidth, scaleHeight)
-            
-            scrollView.minimumZoomScale = minScale * 0.99
-            scrollView.maximumZoomScale = 50.0
-            
-            scrollView.setZoomScale(minScale * 0.9, animated: true)
-            scaleCalculated = true
+        sizeScrollViewToFit()
+    }
+    
+    @objc func sizeScrollViewToFit() {
+        if firstLoad {
+            self.scaleWidth = scrollView.frame.size.width / scrollView.contentSize.width
+            self.scaleHeight = scrollView.frame.size.height / scrollView.contentSize.height
         }
+        
+        self.firstLoad = false
+        
+        scrollView.contentSize = mainMapImageView.frame.size
+        let minScale = min(scaleWidth, scaleHeight)
+        
+        scrollView.minimumZoomScale = minScale * 0.99
+        scrollView.maximumZoomScale = 50.0
+        
+        scrollView.setZoomScale(minScale * 0.9, animated: true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -210,16 +221,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
             poiView.pixelInfo = pixel
             
             poiView.tappedAction = { [weak self] in
-                let width: CGFloat = 200
-                let height: CGFloat = 200
-                
-                self?.scrollView.zoom(to: CGRect(x: poiView.pixelInfo!.position.x - width / 2 , y: poiView.pixelInfo!.position.y - height / 2, width: width, height: height), animated: true)
-                
-                let poiPrevVC = self?.storyboard?.instantiateViewController(withIdentifier: "POIPreviewViewController") as! POIPreviewViewController
-                poiPrevVC.configure(poi: poiView.pixelInfo!.poiType)
-                
-                self?.fpc.set(contentViewController: poiPrevVC)
-                self?.fpc.move(to: .tip, animated: true)
+                self?.zoomOnPOI(pixel.poiType)
             }
             
             let widthScale =  mainMapImageView.bounds.width / 1000.0
@@ -273,6 +275,23 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    private func zoomOnPOI(_ poi: POIType) {
+        let width: CGFloat = 200
+        let height: CGFloat = 200
+        
+        guard let poiPixel = self.pixels.first(where: { $0.poiType == poi} ) else {
+            
+            return }
+        
+        self.scrollView.zoom(to: CGRect(x: poiPixel.position.x - width / 2 , y: poiPixel.position.y - height / 2, width: width, height: height), animated: true)
+        
+        let poiPreviewVC = self.storyboard?.instantiateViewController(withIdentifier: "POIPreviewViewController") as! POIPreviewViewController
+        poiPreviewVC.configure(poi: poi)
+        
+        self.fpc.set(contentViewController: poiPreviewVC)
+        self.fpc.move(to: .tip, animated: true)
+    }
+    
     private func findColors(_ image: UIImage) -> [Pixel] {
         let pixelsWide = Int(image.size.width)
         let pixelsHigh = Int(image.size.height)
@@ -313,6 +332,12 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
             vc.configureWithRoute(Routes.E2Route)
         }
     }
+    
+    @objc func resetFPC() {
+        self.fpc.set(contentViewController: self.poiSearchVC)
+        self.sizeScrollViewToFit()
+        self.fpc.move(to: .tip, animated: true)
+    }
 }
 
 extension MainMapViewController: FloatingPanelControllerDelegate {
@@ -329,7 +354,7 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
             switch position {
             case .full: return 18.0
             case .half: return UIScreen.main.bounds.height / 2.0 // A bottom inset from the safe area
-            case .tip: return UIScreen.main.bounds.height / 4 // A bottom inset from the safe area
+            case .tip: return 180 // A bottom inset from the safe area
             case .hidden: return nil
             }
         }
@@ -338,10 +363,25 @@ extension MainMapViewController: FloatingPanelControllerDelegate {
 
 extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 1 {
+        if indexPath.row == 0 {
+            tableView.deselectRow(at: indexPath, animated: true)
+        let favoritesNavVC = storyboard?.instantiateViewController(withIdentifier: "FavoritesNavViewController") as! UINavigationController
+            
+            let favoritesVC = favoritesNavVC.viewControllers.first as? FavoritesViewController
+            favoritesVC?.delegate = self
+            
+            self.fpc.set(contentViewController: favoritesNavVC)
+            self.fpc.move(to: .full, animated: true)
+        } else if indexPath.row == 1 {
             tableView.deselectRow(at: indexPath, animated: true)
             self.performSegue(withIdentifier: "showNavDemo", sender: self)
         }
+    }
+}
+
+extension MainMapViewController: FavoritesDelegate {
+    func favoriteTapped(_ poi: POIType) {
+        self.zoomOnPOI(poi)
     }
 }
 
