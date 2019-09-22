@@ -20,6 +20,10 @@ class POIPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        guard let poi = self.poi else {
+            return
+        }
+        
         startRouteButton.layer.cornerRadius = 8
         iconImageView.layer.cornerRadius = iconImageView.frame.width / 2
         iconImageViewBackground.layer.cornerRadius = iconImageViewBackground.frame.width / 2
@@ -27,10 +31,10 @@ class POIPreviewViewController: UIViewController {
         iconImageView.tintColor = .white
         favButton.layer.cornerRadius = favButton.frame.width / 2
         
-        self.iconImageView.image = poi!.iconImage()
-        self.nameLabel.text = poi!.rawValue
-        self.iconImageView.backgroundColor = poi!.iconBackgroundColor()
-        self.iconImageViewBackground.backgroundColor = poi!.iconBackgroundColor()
+        self.iconImageView.image = poi.iconImage()
+        self.nameLabel.text = poi.rawValue
+        self.iconImageView.backgroundColor = poi.iconBackgroundColor()
+        self.iconImageViewBackground.backgroundColor = poi.iconBackgroundColor()
     }
     
     func configure(poi: POIType) {
@@ -42,5 +46,11 @@ class POIPreviewViewController: UIViewController {
         
         navDemoVC.configureWithRoute(Routes.E2Route)
         self.present(navDemoVC, animated: true)
+    }
+    
+    @IBAction func favButtonPressed(_ sender: Any) {
+        if let poi = self.poi {
+            FavoritesData.favorites.append(poi)
+        }
     }
 }

@@ -449,6 +449,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AGz-Ow-R2f">
                                 <rect key="frame" x="323" y="131.33333333333334" width="60" height="60"/>
                                 <state key="normal" backgroundImage="like"/>
+                                <connections>
+                                    <action selector="favButtonPressed:" destination="LCF-JF-Di7" eventType="touchUpInside" id="wzh-lZ-Luz"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time to walk:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdk-x4-QxV">
                                 <rect key="frame" x="16" y="150.66666666666666" width="101" height="21"/>
