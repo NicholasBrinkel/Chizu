@@ -23,6 +23,13 @@ enum POIType: String, CaseIterable {
     case westCoffee = "Starbucks #2"
     case event = "OctoberBeast"
     case user = "User"
+    case e2Huddle = "E2-5A-22 Huddle"
+    
+    static func filteredCases() -> [POIType] {
+        return allCases.filter({ (poi) -> Bool in
+            return poi != .user
+        })
+    }
     
     func ctaTitle() -> String? {
         switch self {
@@ -45,6 +52,7 @@ enum POIType: String, CaseIterable {
         case .event:
             return "Event Details"
         case .user: return .none
+        case .e2Huddle: return .none
         }
     }
     
@@ -76,6 +84,7 @@ enum POIType: String, CaseIterable {
             return "October 3rd, 11 AM - 1 PM"
         case .user:
             return ""
+        case .e2Huddle: return "Available for the next 2 hours"
        
         }
     }
@@ -177,6 +186,7 @@ enum POIType: String, CaseIterable {
         case .event:
             return self.menuWrapperView(menuImage: UIImage(named: "EventDetails")!)
         case .user: return .none
+        case .e2Huddle: return .none
         }
     }
     
@@ -191,6 +201,7 @@ enum POIType: String, CaseIterable {
         case .eastCoffee, .westCoffee: return UIColor.black
         case .event: return UIColor(red: 0.5, green: 0.8, blue: 0.8, alpha: 1)
         case .user: return UIColor.blue
+        case .e2Huddle: return UIColor.red
         }
     }
     
@@ -205,6 +216,7 @@ enum POIType: String, CaseIterable {
         case .eastCoffee, .westCoffee: return UIImage(named: "Coffee")
         case .event: return UIImage(named: "event")
         case .user: return .none
+        case .e2Huddle: return .none
         }
     }
     
