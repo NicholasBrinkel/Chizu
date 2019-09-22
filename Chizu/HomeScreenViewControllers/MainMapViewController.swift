@@ -159,8 +159,8 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         fpc.addPanel(toParent: self)
         mainMapImageView.isUserInteractionEnabled = true
         scrollView.delegate = self
-        scrollView.canCancelContentTouches = false
-        scrollView.delaysContentTouches = false
+        //scrollView.canCancelContentTouches = false
+        //scrollView.delaysContentTouches = false
         scrollView.snp.makeConstraints { (make) in
         make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
         }
