@@ -169,7 +169,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         make.bottom.equalToSuperview().offset(0 - (UIScreen.main.bounds.height / 4) - 16)
         }
         
-        fpc.contentViewController?.definesPresentationContext = true
+        scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(sizeScrollViewToFit)))
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -214,17 +214,17 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        sizeScrollViewToFit()
+    }
+    
+    @objc func sizeScrollViewToFit() {
         if firstLoad {
             self.scaleWidth = scrollView.frame.size.width / scrollView.contentSize.width
             self.scaleHeight = scrollView.frame.size.height / scrollView.contentSize.height
         }
         
-        sizeScrollViewToFit()
-        
         self.firstLoad = false
-    }
-    
-    func sizeScrollViewToFit() {
+        
         scrollView.contentSize = mainMapImageView.frame.size
         let minScale = min(scaleWidth, scaleHeight)
         
