@@ -389,45 +389,17 @@
                                     <constraint firstAttribute="height" constant="1" id="RF1-71-1TA"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hours: " textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rBP-7n-zDj">
-                                <rect key="frame" x="32" y="147.33333333333334" width="350" height="28.666666666666657"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Udn-1M-jS2">
-                                <rect key="frame" x="145.66666666666666" y="200" width="122.99999999999997" height="42"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <state key="normal" title="CTA Button"/>
-                                <connections>
-                                    <action selector="ctaButtonTapped:" destination="LCF-JF-Di7" eventType="touchUpInside" id="cVC-h0-26X"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rZq-y2-lJx">
-                                <rect key="frame" x="192" y="274" width="30" height="42"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <connections>
-                                    <action selector="extraCtaButtonTapped:" destination="LCF-JF-Di7" eventType="touchUpInside" id="45u-Z1-yH3"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="Ar1-Cx-mYK" firstAttribute="trailing" secondItem="TbK-AY-QYp" secondAttribute="trailing" constant="8" id="0WF-iK-zbB"/>
-                            <constraint firstItem="rBP-7n-zDj" firstAttribute="leading" secondItem="Ar1-Cx-mYK" secondAttribute="leading" constant="32" id="17a-sV-prD"/>
                             <constraint firstItem="syP-hN-JEQ" firstAttribute="leading" secondItem="Ar1-Cx-mYK" secondAttribute="leading" constant="16" id="19Y-FJ-NvO"/>
-                            <constraint firstItem="rZq-y2-lJx" firstAttribute="top" secondItem="Udn-1M-jS2" secondAttribute="bottom" constant="32" id="5n0-Tu-e8U"/>
                             <constraint firstItem="pPp-ra-1qO" firstAttribute="top" secondItem="Ar1-Cx-mYK" secondAttribute="top" constant="32" id="8bR-wk-rJg"/>
                             <constraint firstItem="syP-hN-JEQ" firstAttribute="centerY" secondItem="pPp-ra-1qO" secondAttribute="centerY" id="BtL-Sm-zYH"/>
-                            <constraint firstItem="rZq-y2-lJx" firstAttribute="centerX" secondItem="Udn-1M-jS2" secondAttribute="centerX" id="Hgx-M9-UqS"/>
                             <constraint firstItem="pPp-ra-1qO" firstAttribute="centerX" secondItem="GrK-38-9RS" secondAttribute="centerX" id="JmJ-YD-GWb"/>
-                            <constraint firstItem="Udn-1M-jS2" firstAttribute="top" secondItem="rBP-7n-zDj" secondAttribute="bottom" constant="24" id="KRe-Ag-UZB"/>
                             <constraint firstItem="Ar1-Cx-mYK" firstAttribute="trailing" secondItem="Voo-Hw-5G5" secondAttribute="trailing" constant="16" id="QWI-7D-8cf"/>
                             <constraint firstItem="TbK-AY-QYp" firstAttribute="leading" secondItem="Ar1-Cx-mYK" secondAttribute="leading" constant="8" id="Qwb-tq-7Zz"/>
-                            <constraint firstItem="rBP-7n-zDj" firstAttribute="top" secondItem="TbK-AY-QYp" secondAttribute="bottom" constant="32" id="RDW-jd-qm9"/>
                             <constraint firstItem="Voo-Hw-5G5" firstAttribute="centerY" secondItem="pPp-ra-1qO" secondAttribute="centerY" id="V1X-rG-SNu"/>
-                            <constraint firstItem="Ar1-Cx-mYK" firstAttribute="trailing" secondItem="rBP-7n-zDj" secondAttribute="trailing" constant="32" id="cAK-aX-rmh"/>
-                            <constraint firstItem="Udn-1M-jS2" firstAttribute="centerX" secondItem="GrK-38-9RS" secondAttribute="centerX" id="ebI-R1-8Sp"/>
                             <constraint firstItem="Voo-Hw-5G5" firstAttribute="leading" secondItem="pPp-ra-1qO" secondAttribute="trailing" constant="8" id="lw5-wg-IJ2"/>
                             <constraint firstItem="TbK-AY-QYp" firstAttribute="top" secondItem="Voo-Hw-5G5" secondAttribute="bottom" constant="30" id="nLm-kC-z3b"/>
                         </constraints>
@@ -435,9 +407,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="Fyh-o1-id5"/>
                     <connections>
-                        <outlet property="ctaButton" destination="Udn-1M-jS2" id="8Dh-1T-HfP"/>
-                        <outlet property="extraCtaButton" destination="rZq-y2-lJx" id="uMB-4p-0Fh"/>
-                        <outlet property="hooLabel" destination="rBP-7n-zDj" id="JeF-X3-sLr"/>
                         <outlet property="iconImaeViewBackground" destination="syP-hN-JEQ" id="LgL-6T-raC"/>
                         <outlet property="iconImageView" destination="36h-fh-USk" id="Ldz-2t-dEj"/>
                         <outlet property="nameLabel" destination="pPp-ra-1qO" id="laU-X6-Nnc"/>
