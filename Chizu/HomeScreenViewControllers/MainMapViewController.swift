@@ -130,6 +130,10 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     var pixels: [Pixel] = []
     fileprivate var poiPins: [POIPin] = []
     @IBOutlet weak var scrollView: UIScrollView!
+    private var firstLoad = true
+    
+    private var scaleWidth: CGFloat!
+    private var scaleHeight: CGFloat!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -210,9 +214,18 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        if firstLoad {
+            self.scaleWidth = scrollView.frame.size.width / scrollView.contentSize.width
+            self.scaleHeight = scrollView.frame.size.height / scrollView.contentSize.height
+        }
+        
+        sizeScrollViewToFit()
+        
+        self.firstLoad = false
+    }
+    
+    func sizeScrollViewToFit() {
         scrollView.contentSize = mainMapImageView.frame.size
-        let scaleWidth = scrollView.frame.size.width / scrollView.contentSize.width
-        let scaleHeight = scrollView.frame.size.height / scrollView.contentSize.height
         let minScale = min(scaleWidth, scaleHeight)
         
         scrollView.minimumZoomScale = minScale * 0.99
