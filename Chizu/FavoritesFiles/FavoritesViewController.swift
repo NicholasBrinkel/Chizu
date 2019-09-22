@@ -63,8 +63,12 @@ class FavoritesCell: UITableViewCell {
     func configureWithPOI(_ poi: POIType) {
         self.poi = poi
         
+        self.iconImageBackgroundView.backgroundColor = poi.iconBackgroundColor()
+        self.iconImageBackgroundView.layer.cornerRadius = self.iconImageBackgroundView.frame.width / 2
         self.iconImageView.image = poi.iconImage()
         self.iconImageView.tintColor = .white
         self.iconImageView.layer.cornerRadius = self.iconImageView.frame.width / 2
+        
+        self.poiName.text = poi.rawValue
     }
 }
