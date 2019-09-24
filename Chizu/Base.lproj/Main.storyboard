@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="116" width="414" height="620"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="POICell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoritesCell" rowHeight="50" id="RWn-tM-Gb9" customClass="FavoritesCell" customModule="POICell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="POICell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="POICell" rowHeight="50" id="RWn-tM-Gb9" customClass="POICell" customModule="Chizu" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RWn-tM-Gb9" id="6Wb-Be-rkz">
@@ -64,9 +64,9 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="iconImageBackgroundView" destination="REr-gH-ndz" id="ApS-wS-5fQ"/>
-                                            <outlet property="iconImageView" destination="M94-zL-swb" id="S92-km-orJ"/>
-                                            <outlet property="poiName" destination="iFt-hQ-zrK" id="z14-IE-rXz"/>
+                                            <outlet property="iconImageBackgroundView" destination="REr-gH-ndz" id="s62-R2-Sr2"/>
+                                            <outlet property="iconImageView" destination="M94-zL-swb" id="nIr-ke-Ldw"/>
+                                            <outlet property="poiName" destination="iFt-hQ-zrK" id="tTN-0n-XxA"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
