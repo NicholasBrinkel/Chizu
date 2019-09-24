@@ -59,7 +59,8 @@ extension CustomPOICategoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cat = self.category else { return UITableViewCell() }
         
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: POICell.self)) as! POICell
+        
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: POICell.self), for: indexPath) as! POICell
         let poi = cat.POIs()[indexPath.row]
         
         cell.configureWithPOI(poi)
