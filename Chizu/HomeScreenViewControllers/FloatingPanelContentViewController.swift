@@ -12,6 +12,8 @@ import UIKit
 class FloatingPanelContentViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var foodAndDrink: UIImageView!
+    @IBOutlet weak var events: UIImageView!
     
     var parentVC: UITableViewDelegate?
     var searchBeginBlock: (() -> ())?
@@ -26,11 +28,28 @@ class FloatingPanelContentViewController: UIViewController {
         searchBar.delegate = self
         searchBar.showsCancelButton = true
         
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(foodAndDrinkTapped))
+        let tapGestureRecognizerEvents = UITapGestureRecognizer.init(target: self, action: #selector(eventsTapped))
+        tapGestureRecognizer.delegate = self
+        tapGestureRecognizerEvents.delegate = self
+        
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableView), name: NSNotification.Name.favAdded, object: nil)
+        
+        foodAndDrink.addGestureRecognizer(tapGestureRecognizer)
+        events.addGestureRecognizer(tapGestureRecognizerEvents)
     }
     
     @objc func reloadTableView() {
         self.tableView.reloadData()
+    }
+    
+    @objc func foodAndDrinkTapped() {
+        
+        NotificationCenter.default.post(name: .foodAndDiningTapped, object: nil)
+    }
+    
+    @objc func eventsTapped() {
+        NotificationCenter.default.post(name: .eventsTapped, object: nil)
     }
 }
 
@@ -60,7 +79,7 @@ extension FloatingPanelContentViewController: UITableViewDataSource {
             print(tableView)
             cell.iconImageView.image = UIImage(named: "like")
             cell.titleLabel.text = "Favorites"
-            cell.subTitleLabel.text = "\(FavoritesData.favorites.count) Place\(FavoritesData.favorites.count == 1 ? "" : "s")"
+            cell.subTitleLabel.text = "\(POICategoriesData.favorites.count) Place\(POICategoriesData.favorites.count == 1 ? "" : "s")"
             return cell
         case 1:
             let cell = UITableViewCell()
@@ -98,6 +117,12 @@ extension FloatingPanelContentViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchCancelledBlock?()
+    }
+}
+
+extension FloatingPanelContentViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 

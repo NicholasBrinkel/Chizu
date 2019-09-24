@@ -13,7 +13,7 @@
         <!--Favorites-->
         <scene sceneID="Je1-yT-xOp">
             <objects>
-                <viewController storyboardIdentifier="FavoritesViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iNe-lA-RIK" customClass="FavoritesViewController" customModule="Chizu" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CustomPOICategoryViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iNe-lA-RIK" customClass="CustomPOICategoryViewController" customModule="Chizu" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6oM-mN-UfZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="116" width="414" height="620"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="FavoritesCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoritesCell" rowHeight="50" id="RWn-tM-Gb9" customClass="FavoritesCell" customModule="Chizu" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="FavoritesCell" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FavoritesCell" rowHeight="50" id="RWn-tM-Gb9" customClass="FavoritesCell" customModule="POICell">
                                         <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RWn-tM-Gb9" id="6Wb-Be-rkz">
@@ -83,6 +83,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Favorites" id="0v9-cU-X53"/>
                     <connections>
+                        <outlet property="navItem" destination="0v9-cU-X53" id="08u-1n-uba"/>
                         <outlet property="tableView" destination="CRg-wV-sWc" id="R5E-Bu-ef7"/>
                     </connections>
                 </viewController>
@@ -111,7 +112,7 @@
                                         <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mdy-oh-2rO">
                                             <rect key="frame" x="0.0" y="66" width="414" height="584"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <view key="tableHeaderView" contentMode="scaleToFill" id="9sx-iK-gkc" customClass="SearchHeaderView" customModule="Chizu" customModuleProvider="target">
+                                            <view key="tableHeaderView" multipleTouchEnabled="YES" contentMode="scaleToFill" id="9sx-iK-gkc" customClass="SearchHeaderView" customModule="Chizu" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="116"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
@@ -121,7 +122,7 @@
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="2bS-tL-3vk">
                                                                 <rect key="frame" x="0.0" y="0.0" width="183" height="81.666666666666671"/>
                                                                 <subviews>
-                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="food" translatesAutoresizingMaskIntoConstraints="NO" id="Ii2-LG-myx">
+                                                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="food" translatesAutoresizingMaskIntoConstraints="NO" id="Ii2-LG-myx">
                                                                         <rect key="frame" x="61.666666666666671" y="0.0" width="60" height="60"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="60" id="Hcf-ms-3zo"/>
@@ -139,7 +140,7 @@
                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="YdA-fr-HSF">
                                                                 <rect key="frame" x="183" y="0.0" width="183" height="81.666666666666671"/>
                                                                 <subviews>
-                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fun" translatesAutoresizingMaskIntoConstraints="NO" id="pFe-vg-bHI">
+                                                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fun" translatesAutoresizingMaskIntoConstraints="NO" id="pFe-vg-bHI">
                                                                         <rect key="frame" x="61.666666666666686" y="0.0" width="60" height="60"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" constant="60" id="eiN-h5-tlJ"/>
@@ -277,13 +278,15 @@
                     </view>
                     <navigationItem key="navigationItem" id="P7i-iw-IvX"/>
                     <connections>
+                        <outlet property="events" destination="pFe-vg-bHI" id="12f-uC-K1R"/>
+                        <outlet property="foodAndDrink" destination="Ii2-LG-myx" id="hA9-ZF-TOb"/>
                         <outlet property="searchBar" destination="Xgy-mt-KBz" id="qJ8-7w-Ofv"/>
                         <outlet property="tableView" destination="mdy-oh-2rO" id="bi3-Wx-btQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N1s-FA-87E" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-288" y="720"/>
+            <point key="canvasLocation" x="-830" y="675"/>
         </scene>
         <!--Stack View Test View Controller-->
         <scene sceneID="tne-QT-ifu">
