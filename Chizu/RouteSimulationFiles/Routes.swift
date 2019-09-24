@@ -24,9 +24,13 @@ class Routes {
             Step(isDirectionLabelVisible: true, directionInstruction: " ", animation: .none, duration: 0.5),
             Step(isDirectionLabelVisible: true, directionInstruction: " ", animation: .drawAllSegments(Example1()), duration: 2),
             Step(isDirectionLabelVisible: true, directionInstruction: " ", animation: .perspectiveSplayAllViews, duration: 2),
-            Step(isDirectionLabelVisible: true, directionInstruction: "Walk to Elevator", animation: .spotlight(Example1.secondFloor.view)),
-            Step(isDirectionLabelVisible: true, directionInstruction: "Take Elevator", animation: .undoSpotlight),
-            Step(isDirectionLabelVisible: true, directionInstruction: "Walk to Conference Room", animation: .spotlight(Example1.fifthFloor.view)),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Walk to Elevator", animation: .spotlight(Example1.secondFloor.view), duration: 0.5),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Walk to Elevator", animation: .trekSegment(Example1().segments[1])),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Take Elevator to the 5th Floor", animation: .removeUserLocation, duration: 0.1),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Take Elevator to the 5th Floor", animation: .undoSpotlight),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Walk to Conference Room E2-5A-22-Huddle", animation: .spotlight(Example1.fifthFloor.view), duration: 0.5),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Walk to Conference Room E2-5A-22-Huddle", animation: .trekSegment(Example1().segments[0])),
+            Step(isDirectionLabelVisible: true, directionInstruction: "Done!", animation: .removeUserLocation, duration: 0.1),
             Step(isDirectionLabelVisible: true, directionInstruction: "Done!", animation: .undoSpotlight)
         ]
     )

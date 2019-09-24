@@ -25,6 +25,7 @@
 		85CDB694233513DC00356E7D /* POIPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDB693233513DC00356E7D /* POIPreviewViewController.swift */; };
 		85CDB69A2337906E00356E7D /* POICategoriesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDB6992337906E00356E7D /* POICategoriesData.swift */; };
 		85CDB69C233795A600356E7D /* CustomPOICategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDB69B233795A600356E7D /* CustomPOICategoryViewController.swift */; };
+		85CDB69E233A884200356E7D /* BlinkingLocationAdder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CDB69D233A884200356E7D /* BlinkingLocationAdder.swift */; };
 		9EE56BB223370E4500B2F425 /* POIInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE56BB123370E4500B2F425 /* POIInfo.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,7 @@
 		85CDB693233513DC00356E7D /* POIPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIPreviewViewController.swift; sourceTree = "<group>"; };
 		85CDB6992337906E00356E7D /* POICategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POICategoriesData.swift; sourceTree = "<group>"; };
 		85CDB69B233795A600356E7D /* CustomPOICategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPOICategoryViewController.swift; sourceTree = "<group>"; };
+		85CDB69D233A884200356E7D /* BlinkingLocationAdder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlinkingLocationAdder.swift; sourceTree = "<group>"; };
 		9EE56BB123370E4500B2F425 /* POIInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -118,6 +120,7 @@
 			children = (
 				012B3124232691E70020F7E0 /* PathCreator.swift */,
 				012B312723285B5C0020F7E0 /* Grid.swift */,
+				85CDB69D233A884200356E7D /* BlinkingLocationAdder.swift */,
 			);
 			path = PathDrawingFiles;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				0129A765232C38290024C342 /* RouteSimulationViewController.swift in Sources */,
 				0129A767232C38B80024C342 /* Routes.swift in Sources */,
 				010FAF0E22C6AE2D00F2252D /* AppDelegate.swift in Sources */,
+				85CDB69E233A884200356E7D /* BlinkingLocationAdder.swift in Sources */,
 				85CDB69C233795A600356E7D /* CustomPOICategoryViewController.swift in Sources */,
 				015F39C722E9227800F8A8B2 /* PerspectiveView.swift in Sources */,
 			);

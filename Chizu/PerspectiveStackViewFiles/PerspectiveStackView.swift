@@ -53,6 +53,9 @@ enum AnimationType {
     case undoSpotlight
     case drawSegment(Segment)
     case drawAllSegments(RoutePath)
+    
+    case trekSegment(Segment)
+    case removeUserLocation
 }
 
 class PerspectiveStackView: UIView {
@@ -89,6 +92,7 @@ class PerspectiveStackView: UIView {
     }
     
     private var animationStatesBeforeSpotlight = [AnimationState]()
+    private var userLocation = UIView()
     
     init(frame: CGRect, withStackedViews views: [UIView], andSpacing spacing: CGFloat) {
         self.spacing = spacing
@@ -344,6 +348,25 @@ class PerspectiveStackView: UIView {
                 pathLayer.add(animation, forKey: "line")
             pathLayer.strokeEnd = 1
                 CATransaction.commit()
+    }
+    
+    func trek(alongSegment segment: Segment) {
+        let blinkingLocation = BlinkingLocationAdder()
+        let points = Grid.shared.getPointsForSegment(segment)
+        let origin = points.first!
+        let viewBeingTrekked = perspectiveViewForView(view: segment.view)
+        let pathCreator = PathCreator()
+        
+        blinkingLocation.configureWith(centerPosition: origin, color: .blue)
+        let path = pathCreator.createPath(fromPoints: points)
+        
+        CATransaction.begin()
+        self.userLocation = blinkingLocation.addTrekAnimationTo(viewBeingTrekked, withPath: path, numberOfSegments: segment.pathPoints.count - 1)
+        CATransaction.commit()
+    }
+    
+    func removeUserLocation() {
+        self.userLocation.removeFromSuperview()
     }
     
     

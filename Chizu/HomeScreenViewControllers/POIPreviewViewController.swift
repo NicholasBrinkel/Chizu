@@ -56,6 +56,11 @@ class POIPreviewViewController: UIViewController {
         self.nameLabel.text = poi.rawValue
         self.iconImageView.backgroundColor = poi.iconBackgroundColor()
         self.iconImageViewBackground.backgroundColor = poi.iconBackgroundColor()
+        
+        if self.poi != POIType.e2Huddle {
+            self.startRouteButton.isEnabled = false
+            self.startRouteButton.alpha = 0.5
+        }
     }
     
     func configure(poi: POIType) {

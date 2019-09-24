@@ -146,6 +146,10 @@ class RouteSimulationViewController: UIViewController {
             floors.drawRoute(forSegment: routePath)
         case .drawAllSegments(let routePath):
             floors.drawAllRouteSegments(forRoutePath: routePath)
+        case .trekSegment(let segment):
+            floors.trek(alongSegment: segment)
+        case .removeUserLocation:
+            floors.removeUserLocation()
         }
     }
     
