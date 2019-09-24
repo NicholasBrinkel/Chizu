@@ -19,6 +19,7 @@ class FloatingPanelContentViewController: UIViewController {
     var searchBeginBlock: (() -> ())?
     var searchCancelledBlock: (() -> ())?
     var presentingPOI: POIType?
+    var filteredPOIResults: [POIType] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +38,14 @@ class FloatingPanelContentViewController: UIViewController {
         
         foodAndDrink.addGestureRecognizer(tapGestureRecognizer)
         events.addGestureRecognizer(tapGestureRecognizerEvents)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        filteredPOIResults = POIType.filteredCases()
+        searchBar.text = ""
+        reloadTableView()
     }
     
     @objc func reloadTableView() {
@@ -67,7 +76,7 @@ extension FloatingPanelContentViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 1 + filteredPOIResults.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -81,12 +90,10 @@ extension FloatingPanelContentViewController: UITableViewDataSource {
             cell.titleLabel.text = "Favorites"
             cell.subTitleLabel.text = "\(POICategoriesData.favorites.count) Place\(POICategoriesData.favorites.count == 1 ? "" : "s")"
             return cell
-        case 1:
-            let cell = UITableViewCell()
-            cell.textLabel?.text = "E2-5A-22-Huddle"
-            return cell
         default:
-            return UITableViewCell()
+            let cell = UITableViewCell()
+            cell.textLabel?.text = filteredPOIResults[indexPath.row - 1].rawValue
+            return cell
         }
     }
     
@@ -107,11 +114,27 @@ extension FloatingPanelContentViewController: UITableViewDataSource {
 extension FloatingPanelContentViewController: UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBeginBlock?()
+        filteredPOIResults = POIType.filteredCases()
+        tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchCancelledBlock?()
+        filteredPOIResults = POIType.filteredCases()
+        tableView.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchText == "" {
+            filteredPOIResults = POIType.filteredCases()
+        } else {
+            filteredPOIResults = POIType.filteredCases().filter({ (poi) -> Bool in
+                return poi.rawValue.range(of: searchText) != nil
+            })
+        }
+        tableView.reloadData()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

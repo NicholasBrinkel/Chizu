@@ -106,6 +106,8 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     private var scaleWidth: CGFloat!
     private var scaleHeight: CGFloat!
     
+    fileprivate var tempE2View: UIView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -166,7 +168,14 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         
         for poiView in self.poiPins {
             poiView.snp.updateConstraints { (make) in
-                make.width.height.equalTo(18 / self.scrollView.zoomScale)
+                let scaledSize = 18 / (self.scrollView.zoomScale / 1.5)
+                
+                if scaledSize > 14 {
+                    make.width.height.equalTo(18 / (self.scrollView.zoomScale / 1.5))
+                } else {
+                    make.width.height.equalTo(14)
+                }
+                
             }
         }
         
@@ -175,6 +184,12 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard let image = self.mainMapImageView.image else {return}
+        
+        if let _ = tempE2View {
+            tempE2View?.removeFromSuperview()
+            tempE2View = .none
+            resetFPC()
+        }
         
         if self.pixels.count < 1 {
             DispatchQueue.global(qos: .background).async { //This takes a long time, so it's done in the background. Will animate the pins in once done processing pixel markers
@@ -229,6 +244,7 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
             poiView.backgroundColor = pixel.poiType.iconBackgroundColor()
             poiView.iconImageView.image = pixel.poiType.iconImage()
             mainMapImageView.addSubview(poiView)
+            poiPins.append(poiView)
             poiView.pixelInfo = pixel
             
             poiView.tappedAction = { [weak self] in
@@ -240,7 +256,14 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
             
             UIView.animate(withDuration: 0.3) {
                 poiView.snp.makeConstraints { (make) in
-                    make.width.height.equalTo(18 / self.scrollView.zoomScale)
+                    
+                    let scaledSize = 18 / (self.scrollView.zoomScale / 1.5)
+                    
+                    if scaledSize > 14 {
+                        make.width.height.equalTo(18 / (self.scrollView.zoomScale / 1.5))
+                    } else {
+                        make.width.height.equalTo(14)
+                    }
                     make.centerX.equalTo(pixel.position.x * widthScale)
                     make.centerY.equalTo(pixel.position.y * heightScale)
                 }
@@ -286,21 +309,38 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    private func zoomOnPOI(_ poi: POIType) {
+    private func zoomOnPOI(_ poi: POIType, isE2Huddle: Bool = false) {
         let width: CGFloat = 200
         let height: CGFloat = 200
         
         guard let poiPixel = self.pixels.first(where: { $0.poiType == poi} ) else {
-            
-            return }
+            return
+        }
         
-        self.scrollView.zoom(to: CGRect(x: poiPixel.position.x - width / 2 , y: poiPixel.position.y - height / 2, width: width, height: height), animated: true)
+        if isE2Huddle {
+            self.scrollView.zoom(to: CGRect(x: poiPixel.position.x - width / 2 , y: poiPixel.position.y - height / 2, width: width * 2, height: height * 2), animated: true)
+        } else {
+            self.scrollView.zoom(to: CGRect(x: poiPixel.position.x - width / 2 , y: poiPixel.position.y - height / 2, width: width, height: height), animated: true)
+        }
         
         let poiPreviewVC = self.storyboard?.instantiateViewController(withIdentifier: "POIPreviewViewController") as! POIPreviewViewController
-        poiPreviewVC.configure(poi: poi)
+        
+        if isE2Huddle {
+            poiPreviewVC.configure(poi: .e2Huddle)
+        } else {
+            poiPreviewVC.configure(poi: poi)
+        }
         
         self.fpc.set(contentViewController: poiPreviewVC)
-        self.fpc.move(to: .tip, animated: true)
+        self.fpc.move(to: .half, animated: true)
+        let poiView = self.poiPins.first { (pin) -> Bool in
+            return pin.pixelInfo?.poiType == poiPixel.poiType
+        }
+        
+        poiView?.snp.updateConstraints { (make) in
+            make.width.height.equalTo(36)
+        }
+        
     }
     
     private func findColors(_ image: UIImage) -> [Pixel] {
@@ -380,7 +420,34 @@ extension MainMapViewController: UITableViewDelegate {
             presentPOICategoryVCFor(category: .favorites)
         } else if indexPath.row == 1 {
             tableView.deselectRow(at: indexPath, animated: true)
-            self.performSegue(withIdentifier: "showNavDemo", sender: self)
+            
+            let selectedPOI = poiSearchVC.filteredPOIResults[indexPath.row - 1]
+            
+            if selectedPOI != .e2Huddle {
+                
+                let poiView = self.poiPins.first { (pin) -> Bool in
+                    return pin.pixelInfo?.poiType == selectedPOI
+                }
+                
+                poiView?.tapped()
+            } else {
+                
+                if let poiPixel = self.pixels.first(where: { $0.poiType == .user} ) {
+                    self.zoomOnPOI(.user, isE2Huddle: true)
+                    
+                    tempE2View = UIView()
+                    tempE2View?.backgroundColor = UIColor.red.withAlphaComponent(0.5)
+                    
+                    mainMapImageView.addSubview(tempE2View!)
+                    
+                    tempE2View?.snp.makeConstraints({ (make) in
+                        make.width.equalTo(300)
+                        make.height.equalTo(120)
+                        make.centerX.equalTo(poiPixel.position.x + 80)
+                        make.centerY.equalTo(poiPixel.position.y + 20)
+                    })
+                }
+            }
         }
     }
     
