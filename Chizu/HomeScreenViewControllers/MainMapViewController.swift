@@ -201,6 +201,26 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
                 for secretPixel in self.pixels {
                     DispatchQueue.main.async {
                         self.drawPOI(pixel: secretPixel)
+                        switch secretPixel.poiType {
+                        case .mainDining, .w4Dining, .e1Market, .eastCoffee, .westCoffee:
+                            POICategoriesData.dining.append(secretPixel.poiType)
+                            if secretPixel.poiType == .mainDining {
+                                POICategoriesData.favorites.append(.mainDining)
+                            }
+                        case .gym:
+                            POICategoriesData.favorites.append(.gym)
+                        case .exCenter:
+                            POICategoriesData.favorites.append(.exCenter)
+                        case .unify:
+                            POICategoriesData.favorites.append(.unify)
+                        case .clinic:
+                            POICategoriesData.favorites.append(.clinic)
+                        case .pharmacy:
+                            POICategoriesData.favorites.append(.pharmacy)
+                        case .event:
+                            POICategoriesData.events.append(.event)
+                        default: let _ = 0
+                        }
                     }
                 }
             }
