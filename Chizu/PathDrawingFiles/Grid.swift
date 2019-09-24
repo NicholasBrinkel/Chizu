@@ -34,6 +34,7 @@ enum SupportedDevice: String {
     case iPhone6Plus = "iPhone 6 Plus"
     case iPhone6Sim = "Simulator iPhone 6"
     case iPhone6PlusSim = "Simulator iPhone 6 Plus"
+    case iPad_5 = "iPad 5"
 }
 
 class Grid {
@@ -87,7 +88,7 @@ class Grid {
                 let xScaleFactor: CGFloat = 2.93
                 let yScaleFactor: CGFloat = 2.85743034
                 return segment.pathPoints.map({ getOffsetCell(for: $0) }).map({ CGPoint(x: $0.x * xScaleFactor, y: $0.y * yScaleFactor) })
-            case .iPad_6, .iPad_6Sim:
+            case .iPad_6, .iPad_6Sim, .iPad_5:
                 xDistanceFromLeftEdgeToContent = 49
                 yDistanceFromTopEdgeToContent = 7.75
                 
