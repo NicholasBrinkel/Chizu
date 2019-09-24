@@ -8,6 +8,8 @@
 
 import Foundation
 
-class FavoritesData {
+class POICategoriesData {
     static var favorites = [POIType]()
+    static var dining = [POIType]()
+    static var events = [POIType]()
 }

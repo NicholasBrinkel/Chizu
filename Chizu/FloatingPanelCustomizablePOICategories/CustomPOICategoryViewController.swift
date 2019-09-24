@@ -8,33 +8,61 @@
 
 import UIKit
 
-protocol FavoritesDelegate: class {
-    func favoriteTapped(_ poi: POIType)
+protocol POICategoriesDelegate: class {
+    func poiTapped(_ poi: POIType)
 }
 
-class FavoritesViewController: UIViewController {
-    @IBOutlet weak var tableView: UITableView!
+enum POICategory: String {
+    case favorites = "Favorites"
+    case food = "Food & Drinks"
+    case events = "Events"
     
-    weak var delegate: FavoritesDelegate?
+    func POIs() -> [POIType] {
+        switch self {
+        case .favorites:
+            return POICategoriesData.favorites
+        case .food:
+            return POICategoriesData.dining
+        case .events:
+            return POICategoriesData.events
+        }
+    }
+}
+
+class CustomPOICategoryViewController: UIViewController {
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var navItem: UINavigationItem!
+    
+    private var category: POICategory?
+    weak var delegate: POICategoriesDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        
+        self.navItem.title = self.category?.rawValue
+    }
+    
+    func configureWithCategory(_ category: POICategory) {
+        self.category = category
     }
 }
 
-extension FavoritesViewController: UITableViewDataSource {
+extension CustomPOICategoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return FavoritesData.favorites.count
+        guard let cat = self.category else { return 0 }
+        return cat.POIs().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: FavoritesCell.self)) as! FavoritesCell
-        let favorite = FavoritesData.favorites[indexPath.row]
+        guard let cat = self.category else { return UITableViewCell() }
         
-        cell.configureWithPOI(favorite)
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: POICell.self)) as! POICell
+        let poi = cat.POIs()[indexPath.row]
+        
+        cell.configureWithPOI(poi)
         
         return cell
         
@@ -45,15 +73,15 @@ extension FavoritesViewController: UITableViewDataSource {
     }
 }
 
-extension FavoritesViewController: UITableViewDelegate {
+extension CustomPOICategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let tappedCell = tableView.cellForRow(at: indexPath) as? FavoritesCell else { return }
+        guard let tappedCell = tableView.cellForRow(at: indexPath) as? POICell else { return }
         
-        delegate?.favoriteTapped(tappedCell.poi)
+        delegate?.poiTapped(tappedCell.poi)
     }
 }
 
-class FavoritesCell: UITableViewCell {
+class POICell: UITableViewCell {
     @IBOutlet weak var poiName: UILabel!
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var iconImageBackgroundView: UIView!

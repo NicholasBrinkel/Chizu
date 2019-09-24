@@ -144,6 +144,17 @@ class MainMapViewController: UIViewController, UIScrollViewDelegate {
         }
         
         scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(resetFPC)))
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(presentDiningPOIs), name: .foodAndDiningTapped, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(presentEventsPOIs), name: .eventsTapped, object: nil)
+    }
+    
+    @objc func presentDiningPOIs() {
+        presentPOICategoryVCFor(category: .food)
+    }
+    
+    @objc func presentEventsPOIs() {
+        presentPOICategoryVCFor(category: .events)
     }
     
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
@@ -405,14 +416,9 @@ extension MainMapViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             tableView.deselectRow(at: indexPath, animated: true)
-        let favoritesNavVC = storyboard?.instantiateViewController(withIdentifier: "FavoritesNavViewController") as! UINavigationController
             
-            let favoritesVC = favoritesNavVC.viewControllers.first as? FavoritesViewController
-            favoritesVC?.delegate = self
-            
-            self.fpc.set(contentViewController: favoritesNavVC)
-            self.fpc.move(to: .full, animated: true)
-        } else {
+            presentPOICategoryVCFor(category: .favorites)
+        } else if indexPath.row == 1 {
             tableView.deselectRow(at: indexPath, animated: true)
             
             let selectedPOI = poiSearchVC.filteredPOIResults[indexPath.row - 1]
@@ -444,10 +450,27 @@ extension MainMapViewController: UITableViewDelegate {
             }
         }
     }
+    
+    func presentPOICategoryVCFor(category: POICategory) {
+        let poiNavVC = customPOICategoryVCFor(category: category)
+        
+        self.fpc.set(contentViewController: poiNavVC)
+        self.fpc.move(to: .full, animated: true)
+    }
+    
+    func customPOICategoryVCFor(category: POICategory) -> UINavigationController {
+        let favoritesNavVC = storyboard?.instantiateViewController(withIdentifier: "FavoritesNavViewController") as! UINavigationController
+        
+        let favoritesVC = favoritesNavVC.viewControllers.first as? CustomPOICategoryViewController
+        favoritesVC?.delegate = self
+        favoritesVC?.configureWithCategory(category)
+        
+        return favoritesNavVC
+    }
 }
 
-extension MainMapViewController: FavoritesDelegate {
-    func favoriteTapped(_ poi: POIType) {
+extension MainMapViewController: POICategoriesDelegate {
+    func poiTapped(_ poi: POIType) {
         self.zoomOnPOI(poi)
     }
 }
